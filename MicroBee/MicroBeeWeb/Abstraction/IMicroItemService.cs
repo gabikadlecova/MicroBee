@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MicroBeeWeb.Model;
+using MicroBee.Model;
 
-namespace MicroBeeWeb.Services
+namespace MicroBee.Services
 {
     interface IMicroItemService
     {

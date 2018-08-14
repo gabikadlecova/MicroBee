@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MicroBeeWeb.Model;
+using MicroBee.Entities;
 
-namespace MicroBeeWeb.Abstraction
+namespace MicroBee.Abstraction
 {
     interface IMicroItemRepository
     {
