@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MicroBee.Entities;
+using MicroBee.Web.Models;
 
-namespace MicroBee.Abstraction
+namespace MicroBee.Web.Abstraction
 {
-    interface IMicroItemRepository
+    public interface IMicroItemRepository
     {
-		MicroItem Find(string id);
-		IEnumerable<MicroItem> GetAll();
-		MicroItem Insert(MicroItem item);
-		MicroItem Update(MicroItem item);
-		void Delete(string id);
+		Task<MicroItem> FindAsync(int id);
+		Task<IQueryable<MicroItem>> GetAllAsync();
+		Task<MicroItem> InsertAsync(MicroItem item);
+		Task<MicroItem> UpdateAsync(MicroItem item);
+		Task DeleteAsync(int id);
 	}
 }

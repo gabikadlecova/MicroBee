@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Abstraction\IMicroItemRepository.cs~RFe8c0f6.TMP" />
+    <None Remove="Abstraction\IMicroItemService.cs~RF49bdaf.TMP" />
+    <None Remove="Abstraction\IMicroItemService.cs~RF5d406f.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -14,10 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\MicroBee.Entities\MicroBee.Entities.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
   </ItemGroup>
 
 </Project>

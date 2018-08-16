@@ -5,10 +5,21 @@
              x:Class="MicroBee.MainPage">
 
     <StackLayout>
-        <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+		<ListView x:Name="itemList">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<ViewCell>
+						<StackLayout Orientation="Horizontal">
+							<Image Source="{Binding Image}" />
+							<StackLayout>
+								<Label Text="{Binding Title}" />
+								<Label Text="{Binding Description}" />
+							</StackLayout>
+						</StackLayout>
+					</ViewCell>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
     </StackLayout>
 
 </ContentPage>
