@@ -6,35 +6,49 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using MicroBee.Web.Abstraction;
+using MicroBee.Web.Context;
 using MicroBee.Web.Models;
 
 namespace MicroBee.Web.Services
 {
 	public class MicroItemRepository : IMicroItemRepository
 	{
-		public Task DeleteAsync(int id)
+		private readonly MicroBeeDbContext _context;
+		public MicroItemRepository(MicroBeeDbContext context)
 		{
-			throw new NotImplementedException();
+			_context = context;
 		}
 
-		public Task<MicroItem> FindAsync(int id)
+		public async Task DeleteAsync(int id)
 		{
-			throw new NotImplementedException();
+			var item = _context.MicroItems.FirstOrDefaultAsync(it => it.Id == id);
+			_context.MicroItems.Remove(await item);
+			await _context.SaveChangesAsync();
 		}
 
-		public Task<IQueryable<MicroItem>> GetAllAsync()
+		public async Task<MicroItem> FindAsync(int id)
 		{
-			throw new NotImplementedException();
+			return await _context.MicroItems.FindAsync(id);
+
 		}
 
-		public Task<MicroItem> InsertAsync(MicroItem item)
+		public IQueryable<MicroItem> GetAll()
 		{
-			throw new NotImplementedException();
+			return _context.MicroItems.AsQueryable();
 		}
 
-		public Task<MicroItem> UpdateAsync(MicroItem item)
+		public async Task<MicroItem> AddAsync(MicroItem item)
 		{
-			throw new NotImplementedException();
+			var added = await _context.AddAsync(item);
+			await _context.SaveChangesAsync();
+			return added.Entity;
+		}
+
+		public async Task<MicroItem> UpdateAsync(MicroItem item)
+		{
+			var updated = _context.MicroItems.Update(item);
+			await _context.SaveChangesAsync();
+			return updated.Entity;
 		}
 	}
 }

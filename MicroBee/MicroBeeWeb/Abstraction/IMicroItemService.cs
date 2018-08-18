@@ -9,11 +9,11 @@ namespace MicroBee.Web.Abstraction
     public interface IMicroItemService
     {
 		Task<MicroItem> FindItemAsync(int id);
-		Task<IEnumerable<MicroItem>> FindItemsAsync(string substr);
-		Task<IEnumerable<MicroItem>> GetAllItemsAsync();
-		Task<IEnumerable<MicroItem>> GetOpenItemsAsync();
+		IEnumerable<MicroItem> FindItems(string substr);
+		IEnumerable<MicroItem> GetAllItems();
+		IEnumerable<MicroItem> GetOpenItems();
 
-		Task<IEnumerable<MicroItem>> GetOpenItemsAsync(string category);
+		IEnumerable<MicroItem> GetOpenItems(string category);
 		Task<MicroItem> InsertItemAsync(MicroItem item);
 		Task<MicroItem> UpdateItemAsync(MicroItem item);
 		Task DeleteItemAsync(int id);

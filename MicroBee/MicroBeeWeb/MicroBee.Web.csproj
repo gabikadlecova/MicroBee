@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove="Abstraction\IMicroItemRepository.cs~RFe8c0f6.TMP" />
+    <None Remove="Abstraction\IMicroItemService.cs~RF1034ebe6.TMP" />
     <None Remove="Abstraction\IMicroItemService.cs~RF49bdaf.TMP" />
     <None Remove="Abstraction\IMicroItemService.cs~RF5d406f.TMP" />
   </ItemGroup>

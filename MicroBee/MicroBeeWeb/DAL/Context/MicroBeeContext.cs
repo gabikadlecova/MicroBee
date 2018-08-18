@@ -15,8 +15,8 @@ namespace MicroBee.Web.Context
 		{
 		}
 
-		DbSet<MicroItem> MicroItems { get; set; }
-		DbSet<ItemCategory> Categories { get; set; }
+		public DbSet<MicroItem> MicroItems { get; set; }
+		public DbSet<ItemCategory> Categories { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

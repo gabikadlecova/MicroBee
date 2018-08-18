@@ -9,8 +9,8 @@ namespace MicroBee.Web.Abstraction
     public interface IMicroItemRepository
     {
 		Task<MicroItem> FindAsync(int id);
-		Task<IQueryable<MicroItem>> GetAllAsync();
-		Task<MicroItem> InsertAsync(MicroItem item);
+		IQueryable<MicroItem> GetAll();
+		Task<MicroItem> AddAsync(MicroItem item);
 		Task<MicroItem> UpdateAsync(MicroItem item);
 		Task DeleteAsync(int id);
 	}

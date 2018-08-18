@@ -25,32 +25,32 @@ namespace MicroBee.Web.Services
 			return await _repository.FindAsync(id);
 		}
 
-		public async Task<IEnumerable<MicroItem>> FindItemsAsync(string substr)
+		public IEnumerable<MicroItem> FindItems(string substr)
 		{
-			var items = await OpenItemsAsync();
+			var items = OpenItems();
 			return items.Where(m => m.Title.Contains(substr));
 		}
 
-		public async Task<IEnumerable<MicroItem>> GetAllItemsAsync()
+		public IEnumerable<MicroItem> GetAllItems()
 		{
-			return await _repository.GetAllAsync();
+			return _repository.GetAll();
 		}
 
-		public async Task<IEnumerable<MicroItem>> GetOpenItemsAsync()
+		public IEnumerable<MicroItem> GetOpenItems()
 		{
 			//todo filtering, Linq to db
-			return await OpenItemsAsync();
+			return OpenItems();
 		}
 
-		public async Task<IEnumerable<MicroItem>> GetOpenItemsAsync(string category)
+		public IEnumerable<MicroItem> GetOpenItems(string category)
 		{
-			var items = await _repository.GetAllAsync();
+			var items = _repository.GetAll();
 			return items.Where(item => item.Category.Name == category);
 		}
 
 		public async Task<MicroItem> InsertItemAsync(MicroItem item)
 		{
-			return await _repository.InsertAsync(item);
+			return await _repository.AddAsync(item);
 		}
 
 		public async Task<MicroItem> UpdateItemAsync(MicroItem item)
@@ -58,9 +58,9 @@ namespace MicroBee.Web.Services
 			return await _repository.UpdateAsync(item);
 		}
 
-		private async Task<IQueryable<MicroItem>> OpenItemsAsync()
+		private IQueryable<MicroItem> OpenItems()
 		{
-			var items = await _repository.GetAllAsync();
+			var items = _repository.GetAll();
 			return items.Where(item => item.Status == ItemStatus.Open);
 		}
 	}

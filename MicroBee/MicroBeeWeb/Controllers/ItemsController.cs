@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Net;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using System.IdentityModel.Tokens.Jwt;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -31,24 +29,24 @@ namespace MicroBee.Web.Controllers
         // GET api/items
 		
         [HttpGet]
-        public async Task<IEnumerable<MicroItem>> Get()
+        public ActionResult<IEnumerable<MicroItem>> Get()
 		{
-			return await _itemService.GetOpenItemsAsync();
+			return _itemService.GetAllItems().ToList();
 		}
 
         // GET api/items/5
 		
         [HttpGet("{id}")]
-        public async Task<MicroItem> Get(int id)
+        public async Task<ActionResult<MicroItem>> Get(int id)
         {
 			return await _itemService.FindItemAsync(id);
         }
 
 		// GET api/items/category
 		[HttpGet("{category}")]
-		public async Task<IEnumerable<MicroItem>> Get(string category)
+		public ActionResult<IEnumerable<MicroItem>> Get(string category)
 		{
-			return await _itemService.GetOpenItemsAsync(category);
+			return _itemService.GetOpenItems(category).ToList();
 		}
 
 		// POST api/items
@@ -60,7 +58,7 @@ namespace MicroBee.Web.Controllers
 
         // PUT api/items/5
         [HttpPut("{id}")]
-        public async Task Put([FromBody]MicroItem value)
+        public async Task Put(int id, [FromBody]MicroItem value)
         {
 			await _itemService.UpdateItemAsync(value);
         }
@@ -72,9 +70,5 @@ namespace MicroBee.Web.Controllers
 			await _itemService.DeleteItemAsync(id);
         }
 
-		private async Task<string> CreateJwtToken(IdentityUser user)
-		{
-			return null;
-		}
     }
 }

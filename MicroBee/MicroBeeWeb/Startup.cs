@@ -33,7 +33,7 @@ namespace MicroBee.Web
         public void ConfigureServices(IServiceCollection services)
         {
 
-			services.AddIdentity<IdentityUser, IdentityRole>()
+			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<MicroBeeDbContext>()
 				.AddDefaultTokenProviders();
 
