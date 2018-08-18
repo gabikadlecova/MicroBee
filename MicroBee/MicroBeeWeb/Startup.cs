@@ -14,6 +14,9 @@ using Microsoft.Extensions.Options;
 using MicroBee.Web.Abstraction;
 using MicroBee.Web.Context;
 using MicroBee.Web.Models;
+using MicroBee.Web.Services;
+
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace MicroBee.Web
 {
@@ -31,23 +34,24 @@ namespace MicroBee.Web
         {
 
 			services.AddIdentity<IdentityUser, IdentityRole>()
-				.AddEntityFrameworkStores<MicroBeeContext>()
+				.AddEntityFrameworkStores<MicroBeeDbContext>()
 				.AddDefaultTokenProviders();
 
 			//Db context
 			string connection = Configuration.GetConnectionString("MicroBeeDatabase");
-			services.AddDbContext<MicroBeeContext>(options => options.UseSqlServer(connection));
+			services.AddDbContext<MicroBeeDbContext>(options => options.UseSqlServer(connection));
 			
 			//Repositories
 
 			//Services
-			services.AddTransient<IMicroItemService, IMicroItemService>();
+			services.AddTransient<IMicroItemService, MicroItemService>();
+			services.AddTransient<IMicroItemRepository, MicroItemRepository>();
 
 			services.AddMvc();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MicroBeeContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MicroBeeDbContext context)
         {
             if (env.IsDevelopment())
             {

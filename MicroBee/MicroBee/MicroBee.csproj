@@ -7,13 +7,10 @@
   <ItemGroup>
     <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />
     <None Remove="IMicroItemManager.cs~RFe830bc.TMP" />
+    <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

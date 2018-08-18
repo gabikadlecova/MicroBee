@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MicroBee.Web.Models;
+using MicroBee.Data;
 
 namespace MicroBee
 {

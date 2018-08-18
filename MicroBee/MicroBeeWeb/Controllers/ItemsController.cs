@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using System.IdentityModel.Tokens.Jwt;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 using MicroBee.Web.Abstraction;
 using MicroBee.Web.Models;
@@ -13,10 +15,14 @@ using MicroBee.Web.Models;
 namespace MicroBee.Web.Controllers
 {
 	[Route("api/[controller]")]
-    public class MicroItemsController : Controller
+    public class ItemsController : Controller
     {
+		//TODO rename async methods! Better names
+		//TODO IActionResults!!!
+
+
 		private readonly IMicroItemService _itemService;
-		public MicroItemsController(IMicroItemService itemService)
+		public ItemsController(IMicroItemService itemService)
 		{
 			_itemService = itemService;
 		}
@@ -25,45 +31,50 @@ namespace MicroBee.Web.Controllers
         // GET api/items
 		
         [HttpGet]
-        public IEnumerable<MicroItem> Get()
+        public async Task<IEnumerable<MicroItem>> Get()
 		{
-			return _itemService.GetOpenItemsAsync();
+			return await _itemService.GetOpenItemsAsync();
 		}
 
         // GET api/items/5
 		
         [HttpGet("{id}")]
-        public MicroItem Get(int id)
+        public async Task<MicroItem> Get(int id)
         {
-			return _itemService.FindItemAsync(id);
+			return await _itemService.FindItemAsync(id);
         }
 
 		// GET api/items/category
 		[HttpGet("{category}")]
-		public IEnumerable<MicroItem> Get(string category)
+		public async Task<IEnumerable<MicroItem>> Get(string category)
 		{
-			return _itemService.GetOpenItemsAsync(category);
+			return await _itemService.GetOpenItemsAsync(category);
 		}
 
 		// POST api/items
 		[HttpPost]
-        public void Post([FromBody]MicroItem value)
+        public async Task Post([FromBody]MicroItem value)
         {
-			_itemService.InsertItemAsync(value);
+			await _itemService.InsertItemAsync(value);
         }
 
         // PUT api/items/5
         [HttpPut("{id}")]
-        public async void Put([FromBody]MicroItem value)
+        public async Task Put([FromBody]MicroItem value)
         {
 			await _itemService.UpdateItemAsync(value);
         }
 
         // DELETE api/items/5
         [HttpDelete("{id}")]
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
 			await _itemService.DeleteItemAsync(id);
         }
+
+		private async Task<string> CreateJwtToken(IdentityUser user)
+		{
+			return null;
+		}
     }
 }

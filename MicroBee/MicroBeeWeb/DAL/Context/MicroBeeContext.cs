@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MicroBee.Web.Context
 {
-	public class MicroBeeContext : IdentityDbContext
+	public class MicroBeeDbContext : IdentityDbContext
 	{
-		public MicroBeeContext(DbContextOptions<MicroBeeContext> options) : base(options)
+		public MicroBeeDbContext(DbContextOptions<MicroBeeDbContext> options) : base(options)
 		{
 		}
 
@@ -20,6 +20,8 @@ namespace MicroBee.Web.Context
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			base.OnModelCreating(modelBuilder);
+
 			modelBuilder.Entity<MicroItem>().HasKey(m => m.Id);
 			modelBuilder.Entity<MicroItem>().HasOne(m => m.Category);
 
