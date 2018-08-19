@@ -30,7 +30,7 @@ namespace MicroBee.Web.Controllers
 		[HttpPost]
 		public Task<IActionResult> Login([FromBody]string value)
 		{
-		
+			throw new NotImplementedException();
 		}
 
 		// POST api/<controller>
@@ -38,6 +38,7 @@ namespace MicroBee.Web.Controllers
 		[HttpPost]
 		public Task<IActionResult> Register([FromBody]string value)
 		{
+			throw new NotImplementedException();
 		}
 
 		private async Task<object> CreateJwtToken(IdentityUser user)
@@ -46,6 +47,8 @@ namespace MicroBee.Web.Controllers
 			{
 
 			};
+
+			throw new NotImplementedException();
 		}
 	}
 }

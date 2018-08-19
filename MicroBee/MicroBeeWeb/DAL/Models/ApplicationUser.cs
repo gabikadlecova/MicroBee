@@ -9,5 +9,6 @@ namespace MicroBee.Web.Models
 {
 	public class ApplicationUser : IdentityUser
 	{
+		public bool Valid { get; set; }
 	}
 }

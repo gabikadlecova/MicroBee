@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MicroBee.Web.Context
 {
-	public class MicroBeeDbContext : IdentityDbContext
+	public class MicroBeeDbContext : IdentityDbContext<ApplicationUser>
 	{
 		public MicroBeeDbContext(DbContextOptions<MicroBeeDbContext> options) : base(options)
 		{
