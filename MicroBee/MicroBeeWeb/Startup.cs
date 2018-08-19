@@ -65,6 +65,7 @@ namespace MicroBee.Web
 						ValidateIssuerSigningKey = true,
 						ValidateAudience = true,
 						ValidateLifetime = true,
+						RequireExpirationTime = true,
 
 						ValidIssuer = Configuration["JwtIssuer"],
 						ValidAudience = Configuration["JwtAudience"],
