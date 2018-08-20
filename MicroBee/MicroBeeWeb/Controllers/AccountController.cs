@@ -19,14 +19,14 @@ using MicroBee.Web.Models;
 
 namespace MicroBee.Web.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	public class AccountController : Controller
 	{
-		private readonly UserManager<IdentityUser> _userManager;
-		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 		private IConfiguration _configuration;
 
-		public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+		public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
@@ -36,17 +36,49 @@ namespace MicroBee.Web.Controllers
 		// POST api/<controller>
 		[AllowAnonymous]
 		[HttpPost]
-		public Task<IActionResult> Login([FromBody]string value)
+		public async Task<IActionResult> Login([FromBody]LoginModel model)
 		{
-			throw new NotImplementedException();
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var user = await _userManager.FindByNameAsync(model.Username);
+
+			var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+			if (!signInResult.Succeeded)
+			{
+				ModelState.AddModelError("Password", "Invalid password.");
+				return BadRequest(ModelState);
+			}
+
+			return Ok(CreateJwtToken(user));
 		}
 
 		// POST api/<controller>
 		[AllowAnonymous]
 		[HttpPost]
-		public Task<IActionResult> Register([FromBody]string value)
+		public async Task<IActionResult> Register([FromBody]RegisterModel model)
 		{
-			throw new NotImplementedException();
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var user = new ApplicationUser() { UserName = model.Username, Email = model.Email };
+
+			var result = await _userManager.CreateAsync(user, model.Password);
+			if (!result.Succeeded)
+			{
+				foreach(IdentityError error in result.Errors)
+				{
+					//todo check
+					ModelState.AddModelError(error.Code, error.Description);
+				}
+				return BadRequest(ModelState);
+			}
+
+			return Ok(CreateJwtToken(user));
 		}
 
 		private object CreateJwtToken(ApplicationUser user)
