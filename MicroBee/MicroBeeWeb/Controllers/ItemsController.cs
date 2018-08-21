@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-
-using MicroBee.Web.Abstraction;
-using MicroBee.Web.Models;
+using MicroBee.Web.DAL.Entities;
+using MicroBee.Web.DAL.Repositories;
 
 
 namespace MicroBee.Web.Controllers

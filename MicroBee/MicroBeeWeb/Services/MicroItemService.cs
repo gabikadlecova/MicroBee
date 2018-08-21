@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MicroBee.Web.Models;
-using MicroBee.Web.Abstraction;
+using MicroBee.Web.DAL.Entities;
+using MicroBee.Web.DAL.Repositories;
 
 namespace MicroBee.Web.Services
 {

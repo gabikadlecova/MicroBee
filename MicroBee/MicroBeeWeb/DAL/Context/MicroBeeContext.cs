@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using MicroBee.Web.Models;
+﻿using MicroBee.Web.DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MicroBee.Web.Context
+namespace MicroBee.Web.DAL.Context
 {
 	public class MicroBeeDbContext : IdentityDbContext<ApplicationUser>
 	{

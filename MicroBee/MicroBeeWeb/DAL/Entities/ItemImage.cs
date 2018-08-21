@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MicroBee.Web.Models
+namespace MicroBee.Web.DAL.Entities
 {
-	public class ItemCategory
+	public class ItemImage
 	{
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public byte[] Data { get; set; }
 	}
 }

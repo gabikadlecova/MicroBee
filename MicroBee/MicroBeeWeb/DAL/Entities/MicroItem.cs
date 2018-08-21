@@ -1,4 +1,4 @@
-﻿namespace MicroBee.Web.Models
+﻿namespace MicroBee.Web.DAL.Entities
 {
 	public class MicroItem
     {
@@ -7,7 +7,10 @@
 		public string Description { get; set; }
 		public ItemCategory Category { get; set; }
 		public ItemStatus Status { get; set; }
-		public byte[] Image { get; set; }
+		public string ImageAddress { get; set; }
+
+		public int OwnerId { get; set; }
+		public int? WorkerId { get; set; }
     }
 
 	public enum ItemStatus

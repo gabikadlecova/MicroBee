@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using MicroBee.Web.DAL.Context;
 using Microsoft.EntityFrameworkCore;
-
-using MicroBee.Web.Abstraction;
-using MicroBee.Web.Context;
-using MicroBee.Web.Models;
+using MicroBee.Web.DAL.Entities;
+using MicroBee.Web.DAL.Repositories;
 
 namespace MicroBee.Web.Services
 {

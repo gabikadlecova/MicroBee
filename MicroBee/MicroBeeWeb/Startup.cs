@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-
+using MicroBee.Web.DAL.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,12 +17,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Microsoft.IdentityModel.Tokens;
-using MicroBee.Web.Abstraction;
-using MicroBee.Web.Context;
-using MicroBee.Web.Models;
+using MicroBee.Web.DAL.Entities;
+using MicroBee.Web.DAL.Repositories;
 using MicroBee.Web.Services;
 
 using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.AspNetCore.Http;
 
 namespace MicroBee.Web
 {
@@ -73,6 +73,18 @@ namespace MicroBee.Web
 					};
 				});
 
+			
+			//services.AddHsts(options =>
+			//{
+			//	options.Preload = true;
+			//	options.IncludeSubDomains = true;
+			//});
+
+			//services.AddHttpsRedirection(options =>
+			//{
+			//	options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+			//});
+
 			services.AddCors();
 			services.AddMvc();
 		}
@@ -84,12 +96,17 @@ namespace MicroBee.Web
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			else
+			{
+				app.UseExceptionHandler("/error");
+				//app.UseHsts();
+			}
 
 			app.UseAuthentication();
 
 			app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			app.UseMvc();
 
 			context.Database.Migrate();

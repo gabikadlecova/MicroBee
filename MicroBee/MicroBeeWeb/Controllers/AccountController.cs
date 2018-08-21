@@ -12,8 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Runtime.Serialization;
-
-using MicroBee.Web.Models;
+using System.Runtime.Serialization.Json;
+using MicroBee.Web.DAL.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,7 +32,7 @@ namespace MicroBee.Web.Controllers
 			_signInManager = signInManager;
 			_configuration = configuration;
 		}
-		
+
 		// POST api/<controller>
 		[AllowAnonymous]
 		[HttpPost]
@@ -70,7 +70,7 @@ namespace MicroBee.Web.Controllers
 			var result = await _userManager.CreateAsync(user, model.Password);
 			if (!result.Succeeded)
 			{
-				foreach(IdentityError error in result.Errors)
+				foreach (IdentityError error in result.Errors)
 				{
 					//todo check
 					ModelState.AddModelError(error.Code, error.Description);
@@ -93,22 +93,24 @@ namespace MicroBee.Web.Controllers
 
 			var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
 			var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-			
-			if(!int.TryParse(_configuration["JwtExpire"], out int expireMins))
+
+			if (!int.TryParse(_configuration["JwtExpire"], out int expireMins))
 			{
 				throw new InvalidConfigurationException("Invalid jwt token expiration date format in configuration file.");
 			}
 
-			var expireTimeSpan = TimeSpan.FromMinutes(expireMins);
+			var expireDateTime = DateTime.Now + TimeSpan.FromMinutes(expireMins);
 
 			var token = new JwtSecurityToken(
 				issuer: _configuration["JwtIssuer"],
 				audience: _configuration["JwtAudience"],
 				claims: claims,
-				expires: DateTime.Now + expireTimeSpan,
+				expires: expireDateTime,
 				signingCredentials: credentials);
 
-			return new JwtSecurityTokenHandler().WriteToken(token);
+			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+			return Json(new { tokenString, expireDateTime });
 		}
 
 		public class InvalidConfigurationException : Exception
