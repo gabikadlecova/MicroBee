@@ -4,14 +4,16 @@ using MicroBee.Web.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicroBee.Web.Migrations
 {
     [DbContext(typeof(MicroBeeDbContext))]
-    partial class MicroBeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180821181218_AddedPrice")]
+    partial class AddedPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,8 +115,7 @@ namespace MicroBee.Web.Migrations
                     b.Property<string>("OwnerId")
                         .IsRequired();
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("Money");
+                    b.Property<decimal>("Price");
 
                     b.Property<int>("Status");
 

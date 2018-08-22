@@ -1,4 +1,5 @@
 using System;
+using MicroBee.Data;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -7,6 +8,7 @@ namespace MicroBee
 {
 	public partial class App : Application
 	{
+		public static IMicroItemService Service = new MicroItemService("http://localhost:56632/");
 		public App ()
 		{
 			InitializeComponent();

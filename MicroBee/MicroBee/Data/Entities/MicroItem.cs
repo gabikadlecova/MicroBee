@@ -7,8 +7,12 @@
 		public string Description { get; set; }
 		public ItemCategory Category { get; set; }
 		public ItemStatus Status { get; set; }
+		public string ImageAddress { get; set; }
 		public byte[] Image { get; set; }
-    }
+
+	    public string OwnerId { get; set; }
+	    public string WorkerId { get; set; }
+	}
 
 	public enum ItemStatus
 	{

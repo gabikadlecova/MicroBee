@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +19,29 @@ namespace MicroBee.Data
 
 		public async Task<MicroItem> GetMicroItemAsync(int id)
 		{
-			var result = await _client.GetStringAsync(_hostName + "/api/items/" + id);
-
-			return JsonConvert.DeserializeObject<MicroItem>(result);
+			var result = await _client.GetAsync(_hostName + "api/items/" + id);
+			
+			return JsonConvert.DeserializeObject<MicroItem>(result.Content.ToString());
 		}
 
-		public async Task<IEnumerable<MicroItem>> GetMicroItemsAsync()
+		public async Task<List<MicroItem>> GetMicroItemsAsync()
 		{
-			throw new NotImplementedException();
+			var response = await _client.GetAsync(_hostName + "api/items");
+
+			if (response.IsSuccessStatusCode)
+			{
+				var items = await response.Content.ReadAsStringAsync();
+				return JsonConvert.DeserializeObject<List<MicroItem>>(items);
+			}
+
+			throw new InvalidOperationException("todo");
 		}
 
-		public async Task<IEnumerable<MicroItem>> GetMicroItemsAsync(string category)
+		public async Task<List<MicroItem>> GetMicroItemsAsync(string category)
 		{
-			throw new NotImplementedException();
+			var result = await _client.GetAsync(_hostName + "api/items/" + category);
+
+			return JsonConvert.DeserializeObject<List<MicroItem>>(result.Content.ToString());
 		}
 
 		public async Task AddMicroItemAsync(MicroItem item)

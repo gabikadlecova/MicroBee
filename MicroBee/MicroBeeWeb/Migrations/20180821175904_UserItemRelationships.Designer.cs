@@ -4,14 +4,16 @@ using MicroBee.Web.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicroBee.Web.Migrations
 {
     [DbContext(typeof(MicroBeeDbContext))]
-    partial class MicroBeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180821175904_UserItemRelationships")]
+    partial class UserItemRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,11 +112,7 @@ namespace MicroBee.Web.Migrations
 
                     b.Property<string>("ImageAddress");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired();
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("Money");
+                    b.Property<string>("OwnerId");
 
                     b.Property<int>("Status");
 
@@ -251,8 +249,7 @@ namespace MicroBee.Web.Migrations
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("CreatedItems")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OwnerId");
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("AcceptedItems")

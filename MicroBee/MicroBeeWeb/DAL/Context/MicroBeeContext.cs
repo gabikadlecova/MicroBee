@@ -1,4 +1,5 @@
-﻿using MicroBee.Web.DAL.Entities;
+﻿using MicroBee.Web.DAL.Context.Configuration;
+using MicroBee.Web.DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,14 @@ namespace MicroBee.Web.DAL.Context
 
 		public DbSet<MicroItem> MicroItems { get; set; }
 		public DbSet<ItemCategory> Categories { get; set; }
+		public DbSet<ItemImage> Images { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<MicroItem>().HasKey(m => m.Id);
-			modelBuilder.Entity<MicroItem>().HasOne(m => m.Category);
+			modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+			modelBuilder.ApplyConfiguration(new MicroItemConfiguration());
 
 			modelBuilder.Entity<ItemCategory>().HasKey(c => c.Id);
 		}

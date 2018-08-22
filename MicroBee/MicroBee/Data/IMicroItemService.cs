@@ -8,8 +8,8 @@ namespace MicroBee.Data
 	public interface IMicroItemService
 	{
 		Task<MicroItem> GetMicroItemAsync(int id);
-		Task<IEnumerable<MicroItem>> GetMicroItemsAsync();
-		Task<IEnumerable<MicroItem>> GetMicroItemsAsync(string category);
+		Task<List<MicroItem>> GetMicroItemsAsync();
+		Task<List<MicroItem>> GetMicroItemsAsync(string category);
 		Task AddMicroItemAsync(MicroItem item);
 		Task UpdateMicroItemAsync(MicroItem item);
 		Task DeleteMicroItemAsync(int id);

@@ -4,10 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
+    <None Remove="Data\Entities\UserProfile.cs~RF202fdd26.TMP" />
+    <None Remove="Data\InvalidResponseException.cs~RF3bc2ba9.TMP" />
     <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />
     <None Remove="IMicroItemManager.cs~RFe830bc.TMP" />
     <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
+    <None Remove="MainPage.xaml.cs~RF36ab923.TMP" />
+    <None Remove="MainPage.xaml.cs~RF378cb5f.TMP" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="DAL\Context\Configuration\ApplicationUserConfiguration.cs~RF2048272b.TMP" />
+    <None Remove="DAL\Context\Configuration\MicroItemConfiguration.cs~RF20426a0d.TMP" />
+    <None Remove="DAL\Entities\MicroItem.cs~RF205c4b7a.TMP" />
     <None Remove="DAL\Repositories\IMicroItemRepository.cs~RFe8c0f6.TMP" />
     <None Remove="DAL\Repositories\IMicroItemService.cs~RF1034ebe6.TMP" />
     <None Remove="DAL\Repositories\IMicroItemService.cs~RF49bdaf.TMP" />
@@ -22,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.3" />
   </ItemGroup>
 
 </Project>

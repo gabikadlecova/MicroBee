@@ -5,12 +5,13 @@
              x:Class="MicroBee.MainPage">
 
     <StackLayout>
-		<ListView x:Name="itemList">
+		<Label>Korela</Label>
+		<ListView x:Name="itemList" >
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
 						<StackLayout Orientation="Horizontal">
-							<Image Source="{Binding Image}" />
+							<!--<Image Source="{Binding Image}" />-->
 							<StackLayout>
 								<Label Text="{Binding Title}" />
 								<Label Text="{Binding Description}" />
@@ -19,7 +20,7 @@
 					</ViewCell>
 				</DataTemplate>
 			</ListView.ItemTemplate>
-		</ListView>
-    </StackLayout>
+		</ListView>	
+	</StackLayout>
 
 </ContentPage>

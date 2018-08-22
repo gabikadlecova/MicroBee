@@ -26,13 +26,17 @@ namespace MicroBee.Web.Services
 
 		public async Task<MicroItem> FindAsync(int id)
 		{
-			return await _context.MicroItems.FindAsync(id);
+			return await _context.MicroItems
+				.Include(m => m.Category)
+				.SingleOrDefaultAsync(m => m.Id == id);
 
 		}
 
 		public IQueryable<MicroItem> GetAll()
 		{
-			return _context.MicroItems.AsQueryable();
+			return _context.MicroItems
+				.Include(m => m.Category)
+				.AsQueryable();
 		}
 
 		public async Task<MicroItem> AddAsync(MicroItem item)
