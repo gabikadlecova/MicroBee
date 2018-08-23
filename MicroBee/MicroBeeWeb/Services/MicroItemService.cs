@@ -25,27 +25,26 @@ namespace MicroBee.Web.Services
 			return await _repository.FindAsync(id);
 		}
 
-		public IEnumerable<MicroItem> FindItems(string substr)
+		public IEnumerable<MicroItem> GetAllItems(int pageNumber, int pageSize)
 		{
-			var items = OpenItems();
-			return items.Where(m => m.Title.Contains(substr));
+			return _repository.GetAll().Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
-		public IEnumerable<MicroItem> GetAllItems()
+		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize)
 		{
-			return _repository.GetAll();
+			return OpenItems().Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
-		public IEnumerable<MicroItem> GetOpenItems()
+		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category)
 		{
-			//todo filtering, Linq to db
-			return OpenItems();
+			var items = _repository.GetAll().Where(item => item.Category.Name == category);
+			return items.Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
-		public IEnumerable<MicroItem> GetOpenItems(string category)
+		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category, string titleFilter)
 		{
-			var items = _repository.GetAll();
-			return items.Where(item => item.Category.Name == category);
+			var items = _repository.GetAll().Where(item => item.Category.Name == category && item.Title.Contains(titleFilter));
+			return items.Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
 		public async Task<MicroItem> InsertItemAsync(MicroItem item)

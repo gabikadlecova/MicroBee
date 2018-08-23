@@ -15,10 +15,10 @@ namespace MicroBee
 			InitializeComponent();
 		}
 
-		protected async override void OnAppearing()
+		protected override async void OnAppearing()
 		{
-			var itemTask = App.Service.GetMicroItemsAsync();
-			itemList.ItemsSource = await itemTask;
+			//var itemTask = App.Service.GetMicroItemsAsync();
+			//itemList.ItemsSource = await itemTask;
 		}
 	}
 }

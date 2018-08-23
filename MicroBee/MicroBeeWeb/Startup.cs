@@ -42,6 +42,7 @@ namespace MicroBee.Web
 			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<MicroBeeDbContext>()
 				.AddDefaultTokenProviders();
+			
 
 			// Db context
 			string connection = Configuration.GetConnectionString("MicroBeeDatabase");

@@ -7,11 +7,11 @@ namespace MicroBee.Web.DAL.Repositories
     public interface IMicroItemService
     {
 		Task<MicroItem> FindItemAsync(int id);
-		IEnumerable<MicroItem> FindItems(string substr);
-		IEnumerable<MicroItem> GetAllItems();
-		IEnumerable<MicroItem> GetOpenItems();
+		IEnumerable<MicroItem> GetAllItems(int pageNumber, int pageSize);
+		IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize);
 
-		IEnumerable<MicroItem> GetOpenItems(string category);
+		IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category);
+		IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category, string titleFilter);
 		Task<MicroItem> InsertItemAsync(MicroItem item);
 		Task<MicroItem> UpdateItemAsync(MicroItem item);
 		Task DeleteItemAsync(int id);

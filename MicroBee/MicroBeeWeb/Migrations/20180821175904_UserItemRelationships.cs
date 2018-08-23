@@ -40,16 +40,7 @@ namespace MicroBee.Web.Migrations
                     table.PrimaryKey("PK_Images", x => x.Id);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_MicroItems_OwnerId",
-                table: "MicroItems",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MicroItems_WorkerId",
-                table: "MicroItems",
-                column: "WorkerId");
-
+            
             migrationBuilder.AddForeignKey(
                 name: "FK_MicroItems_AspNetUsers_OwnerId",
                 table: "MicroItems",
@@ -80,13 +71,7 @@ namespace MicroBee.Web.Migrations
             migrationBuilder.DropTable(
                 name: "Images");
 
-            migrationBuilder.DropIndex(
-                name: "IX_MicroItems_OwnerId",
-                table: "MicroItems");
-
-            migrationBuilder.DropIndex(
-                name: "IX_MicroItems_WorkerId",
-                table: "MicroItems");
+           
 
             migrationBuilder.DropColumn(
                 name: "ImageAddress",

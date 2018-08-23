@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180822192803_ItemOwnerUsername.cs" />
+    <Compile Remove="Migrations\20180822192803_ItemOwnerUsername.Designer.cs" />
+    <Compile Remove="Migrations\20180822194253_UserNameItem.cs" />
+    <Compile Remove="Migrations\20180822194253_UserNameItem.Designer.cs" />
+    <Compile Remove="Migrations\20180822194745_ChangedDependency.cs" />
+    <Compile Remove="Migrations\20180822194745_ChangedDependency.Designer.cs" />
+    <Compile Remove="Migrations\20180822200333_ItemUserName.cs" />
+    <Compile Remove="Migrations\20180822200333_ItemUserName.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="DAL\Context\Configuration\ApplicationUserConfiguration.cs~RF2048272b.TMP" />
     <None Remove="DAL\Context\Configuration\MicroItemConfiguration.cs~RF20426a0d.TMP" />
     <None Remove="DAL\Entities\MicroItem.cs~RF205c4b7a.TMP" />

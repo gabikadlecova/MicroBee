@@ -12,6 +12,7 @@ namespace MicroBee.Web.DAL.Context.Configuration
 	{
 		public void Configure(EntityTypeBuilder<ApplicationUser> builder)
 		{
+			builder.Property(ap => ap.UserName).IsRequired();
 			builder.HasMany(ap => ap.CreatedItems)
 				.WithOne();
 

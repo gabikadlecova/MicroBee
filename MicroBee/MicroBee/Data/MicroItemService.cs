@@ -10,23 +10,26 @@ namespace MicroBee.Data
 {
 	class MicroItemService : IMicroItemService
 	{
-		private HttpClient _client = new HttpClient();
-		private string _hostName;
-		public MicroItemService(string hostName)
+		private string HostName { get; }
+
+		private HttpClient Client { get; }
+
+		public MicroItemService(string hostName, HttpClient client)
 		{
-			_hostName = hostName;
+			HostName = hostName;
+			Client = client;
 		}
 
 		public async Task<MicroItem> GetMicroItemAsync(int id)
 		{
-			var result = await _client.GetAsync(_hostName + "api/items/" + id);
+			var result = await Client.GetAsync(HostName + "api/items/" + id);
 			
 			return JsonConvert.DeserializeObject<MicroItem>(result.Content.ToString());
 		}
 
-		public async Task<List<MicroItem>> GetMicroItemsAsync()
+		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize)
 		{
-			var response = await _client.GetAsync(_hostName + "api/items");
+			var response = await Client.GetAsync(HostName + "api/items?" + "pageNumber=" + pageNumber + "&pageSize=" + pageSize);
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -34,14 +37,25 @@ namespace MicroBee.Data
 				return JsonConvert.DeserializeObject<List<MicroItem>>(items);
 			}
 
-			throw new InvalidOperationException("todo");
+			throw new InvalidResponseException();
 		}
 
-		public async Task<List<MicroItem>> GetMicroItemsAsync(string category)
+		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize, string category)
 		{
-			var result = await _client.GetAsync(_hostName + "api/items/" + category);
+			var response = await Client.GetAsync(HostName + "api/items/" + category + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
 
-			return JsonConvert.DeserializeObject<List<MicroItem>>(result.Content.ToString());
+			if (response.IsSuccessStatusCode)
+			{
+				var items = await response.Content.ReadAsStringAsync();
+				return JsonConvert.DeserializeObject<List<MicroItem>>(items);
+			}
+
+			throw new InvalidResponseException();
+		}
+
+		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize, string category, string titleFilter)
+		{
+			throw new NotImplementedException();
 		}
 
 		public async Task AddMicroItemAsync(MicroItem item)
@@ -58,5 +72,6 @@ namespace MicroBee.Data
 		{
 			throw new NotImplementedException();
 		}
+		
 	}
 }

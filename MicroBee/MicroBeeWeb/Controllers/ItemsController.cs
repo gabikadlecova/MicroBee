@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using MicroBee.Web.DAL.Entities;
 using MicroBee.Web.DAL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace MicroBee.Web.Controllers
 {
 	[Route("api/[controller]")]
     public class ItemsController : Controller
-    {
-		//TODO rename async methods! Better names
-		//TODO IActionResults!!!
-
-
+	{
+		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IMicroItemService _itemService;
-		public ItemsController(IMicroItemService itemService)
+		public ItemsController(IMicroItemService itemService, UserManager<ApplicationUser> userManager)
 		{
 			_itemService = itemService;
+			_userManager = userManager;
 		}
 
 
         // GET api/items
 		
         [HttpGet]
-        public ActionResult<IEnumerable<MicroItem>> Get()
+        public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize)
 		{
-			return _itemService.GetAllItems().ToList();
+			// returns only items which have no worker user assigned
+			return _itemService.GetOpenItems(pageNumber, pageSize).ToList();
 		}
 
-        // GET api/items/5
+        // GET api/items/id
 		
         [HttpGet("{id}")]
         public async Task<ActionResult<MicroItem>> Get(int id)
@@ -43,31 +44,76 @@ namespace MicroBee.Web.Controllers
 
 		// GET api/items/category
 		[HttpGet("{category}")]
-		public ActionResult<IEnumerable<MicroItem>> Get(string category)
+		public ActionResult<List<MicroItem>> Get([FromQuery]string category, int pageNumber, int pageSize)
 		{
-			return _itemService.GetOpenItems(category).ToList();
+			return _itemService.GetOpenItems(pageNumber, pageSize, category).ToList();
 		}
 
 		// POST api/items
 		[HttpPost]
-        public async Task Post([FromBody]MicroItem value)
+		[Authorize]
+        public async Task<IActionResult> Post([FromBody]MicroItem model)
         {
-			await _itemService.InsertItemAsync(value);
+	        string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+	        if (id == null)
+	        {
+		        return Unauthorized();
+	        }
+
+	        var user = await _userManager.FindByIdAsync(id);
+	        model.OwnerName = user.UserName;
+	        model.WorkerName = null;
+
+			// todo upload image
+
+			await _itemService.InsertItemAsync(model);
+	        return Ok();
         }
 
-        // PUT api/items/5
+        // PUT api/items/id
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody]MicroItem value)
+		[Authorize]
+        public async Task<IActionResult> Put(int id, [FromBody]MicroItem model)
         {
-			await _itemService.UpdateItemAsync(value);
+	        if (id != model.Id)
+	        {
+		        return BadRequest();
+	        }
+
+	        MicroItem oldItem = await _itemService.FindItemAsync(id);
+
+			// assigning to properties which are allowed to be modified
+	        oldItem.Category = model.Category;
+	        oldItem.Description = model.Description;
+	        oldItem.Price = model.Price;
+	        oldItem.Title = model.Title;
+
+			await _itemService.UpdateItemAsync(oldItem);
+	        return NoContent();
         }
 
-        // DELETE api/items/5
+        // DELETE api/items/id
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
-        {
+		[Authorize]
+        public async Task<IActionResult> Delete(int id)
+		{
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			var userTask = _userManager.FindByIdAsync(userId);
+			var item = await _itemService.FindItemAsync(id);
+
+			if ((await userTask).UserName != item.OwnerName)
+			{
+				return Unauthorized();
+			}
+
 			await _itemService.DeleteItemAsync(id);
-        }
+			return Ok("Item was deleted.");
+		}
 
     }
 }

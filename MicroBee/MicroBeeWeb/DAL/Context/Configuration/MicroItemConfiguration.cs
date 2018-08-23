@@ -18,11 +18,13 @@ namespace MicroBee.Web.DAL.Context.Configuration
 
 			builder.HasOne<ApplicationUser>()
 				.WithMany(ap => ap.CreatedItems)
-				.HasForeignKey(m => m.OwnerId);
+				.HasPrincipalKey(ap => ap.UserName)
+				.HasForeignKey(m => m.OwnerName);
 
 			builder.HasOne<ApplicationUser>()
 				.WithMany(ap => ap.AcceptedItems)
-				.HasForeignKey(m => m.WorkerId);
+				.HasPrincipalKey(ap => ap.UserName)
+				.HasForeignKey(m => m.WorkerName);
 
 			builder.Property(m => m.Price).HasColumnType("Money");
 

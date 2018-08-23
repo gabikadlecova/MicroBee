@@ -4,14 +4,16 @@ using MicroBee.Web.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MicroBee.Web.Migrations
 {
     [DbContext(typeof(MicroBeeDbContext))]
-    partial class MicroBeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180822195657_UserName")]
+    partial class UserName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +113,7 @@ namespace MicroBee.Web.Migrations
 
                     b.Property<string>("ImageAddress");
 
-                    b.Property<string>("OwnerName")
+                    b.Property<string>("OwnerId")
                         .IsRequired();
 
                     b.Property<decimal>("Price")
@@ -121,15 +123,15 @@ namespace MicroBee.Web.Migrations
 
                     b.Property<string>("Title");
 
-                    b.Property<string>("WorkerName");
+                    b.Property<string>("WorkerId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("OwnerName");
+                    b.HasIndex("OwnerId");
 
-                    b.HasIndex("WorkerName");
+                    b.HasIndex("WorkerId");
 
                     b.ToTable("MicroItems");
                 });
@@ -252,13 +254,13 @@ namespace MicroBee.Web.Migrations
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("CreatedItems")
-                        .HasForeignKey("OwnerName")
+                        .HasForeignKey("OwnerId")
                         .HasPrincipalKey("UserName")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("AcceptedItems")
-                        .HasForeignKey("WorkerName")
+                        .HasForeignKey("WorkerId")
                         .HasPrincipalKey("UserName");
                 });
 

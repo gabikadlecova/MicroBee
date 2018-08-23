@@ -10,8 +10,8 @@
 		public string ImageAddress { get; set; }
 		public byte[] Image { get; set; }
 
-	    public string OwnerId { get; set; }
-	    public string WorkerId { get; set; }
+	    public string OwnerName { get; set; }
+	    public string WorkerName { get; set; }
 	}
 
 	public enum ItemStatus

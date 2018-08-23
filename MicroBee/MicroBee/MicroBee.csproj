@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Entities\MicroItem.cs~RF4eeaadb.TMP" />
     <None Remove="Data\Entities\UserProfile.cs~RF202fdd26.TMP" />
     <None Remove="Data\InvalidResponseException.cs~RF3bc2ba9.TMP" />
     <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />

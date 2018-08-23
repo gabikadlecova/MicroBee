@@ -12,8 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 using MicroBee.Web.DAL.Entities;
+using MicroBee.Web.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,6 +65,11 @@ namespace MicroBee.Web.Controllers
 				return BadRequest(ModelState);
 			}
 
+			if (await _userManager.FindByEmailAsync(model.Email) != null)
+			{
+				return BadRequest();
+			}
+
 			var user = new ApplicationUser() { UserName = model.Username, Email = model.Email };
 
 			var result = await _userManager.CreateAsync(user, model.Password);
@@ -79,6 +84,62 @@ namespace MicroBee.Web.Controllers
 			}
 
 			return Ok(CreateJwtToken(user));
+		}
+
+		[Authorize]
+		[HttpGet]
+		public async Task<IActionResult> Profile()
+		{
+			string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (id == null)
+			{
+				return Unauthorized();
+			}
+
+			var user = await _userManager.FindByIdAsync(id);
+
+			UserProfileModel model = new UserProfileModel()
+			{
+				Username = user.UserName,
+				AcceptedItems = user.AcceptedItems,
+				CreatedItems = user.CreatedItems,
+				Valid = user.Valid,
+				Email = user.Email
+			};
+
+			return Ok(model);
+		}
+
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> UpdateProfile([FromBody]UserProfileModel model)
+		{
+			string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (id == null)
+			{
+				return Unauthorized();
+			}
+
+			// model Username and token Username don't match
+			var user = await _userManager.FindByIdAsync(id);
+			if (user.UserName != model.Username)
+			{
+				return Unauthorized();
+			}
+
+			user.Email = model.Email;
+			var result = await _userManager.UpdateAsync(user);
+
+			if (!result.Succeeded)
+			{
+				return BadRequest();
+			}
+			
+			// these properties are not changed by the request
+			model.AcceptedItems = user.AcceptedItems;
+			model.CreatedItems = user.CreatedItems;
+			model.Valid = user.Valid;
+			return Ok(model);
 		}
 
 		private object CreateJwtToken(ApplicationUser user)
@@ -110,7 +171,7 @@ namespace MicroBee.Web.Controllers
 
 			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-			return Json(new { tokenString, expireDateTime });
+			return new { tokenString, expireDateTime };
 		}
 
 		public class InvalidConfigurationException : Exception
