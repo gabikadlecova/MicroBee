@@ -79,8 +79,21 @@ namespace MicroBee.Web.Controllers
 	        {
 		        return BadRequest();
 	        }
+			
 
-	        MicroItem oldItem = await _itemService.FindItemAsync(id);
+	        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+	        if (userId == null)
+	        {
+		        return Unauthorized();
+	        }
+	        var user = await _userManager.FindByIdAsync(userId);
+
+	        if (!await IsUserOwnerAsync(userId, id))
+	        {
+		        return Forbid();
+	        }
+
+			MicroItem oldItem = await _itemService.FindItemAsync(id);
 
 			// assigning to properties which are allowed to be modified
 	        oldItem.Category = model.Category;
@@ -92,8 +105,35 @@ namespace MicroBee.Web.Controllers
 	        return NoContent();
         }
 
-        // DELETE api/items/id
-        [HttpDelete("{id}")]
+		// PUT api/items/id
+		[HttpPost("worker")]
+		[Authorize]
+		public async Task<IActionResult> Worker(int id)
+		{
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			var user = await _userManager.FindByIdAsync(userId);
+
+			// owner cannot be worker!
+			bool isOwner = await IsUserOwnerAsync(userId, id);
+			if (isOwner)
+			{
+				return BadRequest();
+			}
+
+			MicroItem oldItem = await _itemService.FindItemAsync(id);
+			oldItem.WorkerName = user.UserName;
+
+			await _itemService.UpdateItemAsync(oldItem);
+			return Ok();
+		}
+
+		// DELETE api/items/id
+		[HttpDelete("{id}")]
 		[Authorize]
         public async Task<IActionResult> Delete(int id)
 		{
@@ -103,17 +143,22 @@ namespace MicroBee.Web.Controllers
 				return Unauthorized();
 			}
 
-			var userTask = _userManager.FindByIdAsync(userId);
-			var item = await _itemService.FindItemAsync(id);
-
-			if ((await userTask).UserName != item.OwnerName)
+			bool isOwner = await IsUserOwnerAsync(userId, id);
+			if (!isOwner)
 			{
-				return Unauthorized();
+				return Forbid();
 			}
 
 			await _itemService.DeleteItemAsync(id);
 			return Ok("Item was deleted.");
 		}
 
+		private async Task<bool> IsUserOwnerAsync(string userId, int itemId)
+		{
+			var userTask = _userManager.FindByIdAsync(userId);
+			var item = await _itemService.FindItemAsync(itemId);
+
+			return (await userTask).UserName == item.OwnerName;
+		}
     }
 }
