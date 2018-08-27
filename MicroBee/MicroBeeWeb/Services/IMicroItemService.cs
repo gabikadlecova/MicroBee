@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MicroBee.Web.DAL.Entities;
 
-namespace MicroBee.Web.DAL.Repositories
+namespace MicroBee.Web.Services
 {
     public interface IMicroItemService
     {

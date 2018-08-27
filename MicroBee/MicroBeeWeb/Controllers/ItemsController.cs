@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using MicroBee.Web.DAL.Entities;
-using MicroBee.Web.DAL.Repositories;
+using MicroBee.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -18,10 +18,15 @@ namespace MicroBee.Web.Controllers
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IMicroItemService _itemService;
-		public ItemsController(IMicroItemService itemService, UserManager<ApplicationUser> userManager)
+		private readonly IMicroImageService _imageService;
+		private readonly ICategoryService _categoryService;
+		public ItemsController(IMicroItemService itemService, IMicroImageService imageService, ICategoryService categoryService, UserManager<ApplicationUser> userManager)
 		{
 			_itemService = itemService;
 			_userManager = userManager;
+
+			_imageService = imageService;
+			_categoryService = categoryService;
 		}
 
 
@@ -36,15 +41,22 @@ namespace MicroBee.Web.Controllers
 
         // GET api/items/id
 		
-        [HttpGet("{id}")]
+        [HttpGet("detail/{id}")]
         public async Task<ActionResult<MicroItem>> Get(int id)
         {
-			return await _itemService.FindItemAsync(id);
+			var item = await _itemService.FindItemAsync(id);
+
+	        if (item == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(item);
         }
 
 		// GET api/items/category
 		[HttpGet("{category}")]
-		public ActionResult<List<MicroItem>> Get([FromQuery]string category, int pageNumber, int pageSize)
+		public ActionResult<List<MicroItem>> Get(string category, int pageNumber, int pageSize)
 		{
 			return _itemService.GetOpenItems(pageNumber, pageSize, category).ToList();
 		}
@@ -60,22 +72,30 @@ namespace MicroBee.Web.Controllers
 		        return Unauthorized();
 	        }
 
+	        if (!ModelState.IsValid)
+	        {
+		        return BadRequest();
+	        }
+
 	        var user = await _userManager.FindByIdAsync(id);
 	        model.OwnerName = user.UserName;
 	        model.WorkerName = null;
 
-			// todo upload image
+			var item = await _itemService.InsertItemAsync(model);
+	        if (item == null)
+	        {
+		        return BadRequest();
+	        }
 
-			await _itemService.InsertItemAsync(model);
 	        return Ok();
         }
 
         // PUT api/items/id
-        [HttpPut("{id}")]
+        [HttpPut]
 		[Authorize]
-        public async Task<IActionResult> Put(int id, [FromBody]MicroItem model)
+        public async Task<IActionResult> Put([FromBody]MicroItem model)
         {
-	        if (id != model.Id)
+	        if (!ModelState.IsValid)
 	        {
 		        return BadRequest();
 	        }
@@ -86,14 +106,13 @@ namespace MicroBee.Web.Controllers
 	        {
 		        return Unauthorized();
 	        }
-	        var user = await _userManager.FindByIdAsync(userId);
 
-	        if (!await IsUserOwnerAsync(userId, id))
+	        if (!await IsUserOwnerAsync(userId, model.Id))
 	        {
 		        return Forbid();
 	        }
 
-			MicroItem oldItem = await _itemService.FindItemAsync(id);
+			MicroItem oldItem = await _itemService.FindItemAsync(model.Id);
 
 			// assigning to properties which are allowed to be modified
 	        oldItem.Category = model.Category;
@@ -101,7 +120,12 @@ namespace MicroBee.Web.Controllers
 	        oldItem.Price = model.Price;
 	        oldItem.Title = model.Title;
 
-			await _itemService.UpdateItemAsync(oldItem);
+			var item = await _itemService.UpdateItemAsync(oldItem);
+	        if (item == null)
+	        {
+		        return BadRequest();
+	        }
+
 	        return NoContent();
         }
 
@@ -128,7 +152,12 @@ namespace MicroBee.Web.Controllers
 			MicroItem oldItem = await _itemService.FindItemAsync(id);
 			oldItem.WorkerName = user.UserName;
 
-			await _itemService.UpdateItemAsync(oldItem);
+			var item = await _itemService.UpdateItemAsync(oldItem);
+			if (item == null)
+			{
+				return BadRequest();
+			}
+
 			return Ok();
 		}
 
@@ -149,16 +178,81 @@ namespace MicroBee.Web.Controllers
 				return Forbid();
 			}
 
+			
 			await _itemService.DeleteItemAsync(id);
 			return Ok("Item was deleted.");
 		}
+
+		[HttpGet("categories")]
+		public ActionResult<List<ItemCategory>> GetCategories()
+		{
+			return _categoryService.GetCategories().ToList();
+		}
+
+		[HttpGet("image/{imageId}")]
+		public async Task<IActionResult> Image(int imageId)
+		{
+			var item = await _imageService.FindImageAsync(imageId);
+			if (item == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(item);
+;		}
+
+		[HttpPost("detail/image/{itemId}")]
+		[Authorize]
+		public async Task<IActionResult> UpdateImage(int itemId, [FromBody]ItemImage image)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
+
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			bool owner = await IsUserOwnerAsync(userId, itemId);
+			if (!owner)
+			{
+				return Forbid();
+			}
+
+			var item = await _itemService.FindItemAsync(itemId);
+
+			if (item.ImageAddress == null)
+			{
+				var uploaded = await _imageService.InsertImageAsync(image);
+				if (uploaded != null)
+				{
+					return CreatedAtAction("Image", uploaded.Id);
+				}
+			}
+			else
+			{
+				var updated = await _imageService.UpdateImageAsync(image);
+				if (updated != null)
+				{
+					return Ok();
+				}
+			}
+
+			return BadRequest();
+		}
+
 
 		private async Task<bool> IsUserOwnerAsync(string userId, int itemId)
 		{
 			var userTask = _userManager.FindByIdAsync(userId);
 			var item = await _itemService.FindItemAsync(itemId);
 
-			return (await userTask).UserName == item.OwnerName;
+			string userName = (await userTask)?.UserName;
+
+			return userName == item?.OwnerName;
 		}
     }
 }
