@@ -49,10 +49,14 @@ namespace MicroBee.Web
 			services.AddDbContext<MicroBeeDbContext>(options => options.UseSqlServer(connection));
 
 			// Repositories
+			services.AddTransient<IMicroItemRepository, MicroItemRepository>();
+			services.AddTransient<IMicroImageRepository, MicroImageRepository>();
+			services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 			// Services
 			services.AddTransient<IMicroItemService, MicroItemService>();
-			services.AddTransient<IMicroItemRepository, MicroItemRepository>();
+			services.AddTransient<IMicroImageService, MicroImageService>();
+			services.AddTransient<ICategoryService, CategoryService>();
 
 			// Jwt bearer token authentication setup
 			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); //clears default MS claim names
@@ -114,3 +118,4 @@ namespace MicroBee.Web
 		}
 	}
 }
+
