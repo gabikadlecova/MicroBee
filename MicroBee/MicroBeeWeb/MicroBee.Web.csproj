@@ -19,12 +19,15 @@
     <None Remove="DAL\Context\Configuration\ApplicationUserConfiguration.cs~RF2048272b.TMP" />
     <None Remove="DAL\Context\Configuration\MicroItemConfiguration.cs~RF20426a0d.TMP" />
     <None Remove="DAL\Entities\MicroItem.cs~RF205c4b7a.TMP" />
+    <None Remove="DAL\Repositories\ICategoryRepository.cs~RF14f0feac.TMP" />
     <None Remove="DAL\Repositories\IMicroItemRepository.cs~RFe8c0f6.TMP" />
     <None Remove="DAL\Repositories\IMicroItemService.cs~RF1034ebe6.TMP" />
     <None Remove="DAL\Repositories\IMicroItemService.cs~RF49bdaf.TMP" />
     <None Remove="DAL\Repositories\IMicroItemService.cs~RF5d406f.TMP" />
     <None Remove="DAL\Entities\RegisterModel.cs~RF1a3c9158.TMP" />
     <None Remove="Program.cs~RF1b4f50cb.TMP" />
+    <None Remove="Services\ICategoryService.cs~RF14eec99c.TMP" />
+    <None Remove="Services\IMicroImageService.cs~RF14f50223.TMP" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using MicroBee.Web.DAL.Context.Configuration;
+﻿using System.Linq;
+using MicroBee.Web.DAL.Context.Configuration;
 using MicroBee.Web.DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace MicroBee.Web.DAL.Context
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
-
+			
 			modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
 			modelBuilder.ApplyConfiguration(new MicroItemConfiguration());
 

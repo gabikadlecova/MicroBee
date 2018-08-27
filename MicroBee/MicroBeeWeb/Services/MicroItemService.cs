@@ -9,7 +9,6 @@ namespace MicroBee.Web.Services
 	class MicroItemService : IMicroItemService
 	{
 		private readonly IMicroItemRepository _repository;
-
 		public MicroItemService(IMicroItemRepository repository)
 		{
 			_repository = repository;

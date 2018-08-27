@@ -14,6 +14,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using MicroBee.Web.DAL.Entities;
 using MicroBee.Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -95,9 +96,13 @@ namespace MicroBee.Web.Controllers
 			{
 				return Unauthorized();
 			}
-
-			var user = await _userManager.FindByIdAsync(id);
-
+			
+			var user = await _userManager.Users
+				.Where(u => u.Id == id)
+				.Include(u => u.AcceptedItems)
+				.Include(u => u.CreatedItems)
+				.FirstOrDefaultAsync();
+			
 			UserProfileModel model = new UserProfileModel()
 			{
 				Username = user.UserName,
@@ -135,11 +140,7 @@ namespace MicroBee.Web.Controllers
 				return BadRequest();
 			}
 			
-			// these properties are not changed by the request
-			model.AcceptedItems = user.AcceptedItems;
-			model.CreatedItems = user.CreatedItems;
-			model.Valid = user.Valid;
-			return Ok(model);
+			return await Profile();
 		}
 
 		private object CreateJwtToken(ApplicationUser user)
