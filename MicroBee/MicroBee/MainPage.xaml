@@ -4,9 +4,8 @@
              xmlns:local="clr-namespace:MicroBee"
              x:Class="MicroBee.MainPage">
 
-    <StackLayout>
-		<Label>Korela</Label>
-		<ListView x:Name="itemList" >
+	<StackLayout>
+		<ListView x:Name="ItemList" >
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>

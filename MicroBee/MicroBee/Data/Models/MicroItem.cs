@@ -1,4 +1,4 @@
-﻿namespace MicroBee.Data
+﻿namespace MicroBee.Data.Models
 {
 	public class MicroItem
     {
@@ -7,8 +7,7 @@
 		public string Description { get; set; }
 		public ItemCategory Category { get; set; }
 		public ItemStatus Status { get; set; }
-		public string ImageAddress { get; set; }
-		public byte[] Image { get; set; }
+		public int? ImageId { get; set; }
 
 	    public string OwnerName { get; set; }
 	    public string WorkerName { get; set; }

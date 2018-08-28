@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MicroBee.Web.DAL.Entities
+namespace MicroBee.Web.Models
 {
 	public class LoginModel
 	{

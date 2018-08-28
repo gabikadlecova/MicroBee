@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MicroBee.Web.DAL.Context;
-using Microsoft.EntityFrameworkCore;
 using MicroBee.Web.DAL.Entities;
-using MicroBee.Web.DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace MicroBee.Web.Services
+namespace MicroBee.Web.DAL.Repositories
 {
 	public class MicroItemRepository : IMicroItemRepository
 	{

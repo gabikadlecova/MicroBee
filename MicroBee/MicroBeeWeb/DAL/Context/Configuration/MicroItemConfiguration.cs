@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MicroBee.Web.DAL.Context.Configuration
 {
-	public class MicroItemConfiguration : IEntityTypeConfiguration<MicroItem>
+	class MicroItemConfiguration : IEntityTypeConfiguration<MicroItem>
 	{
 		public void Configure(EntityTypeBuilder<MicroItem> builder)
 		{

@@ -10,8 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\Entities\MicroItem.cs~RF4eeaadb.TMP" />
-    <None Remove="Data\Entities\UserProfile.cs~RF202fdd26.TMP" />
+    <None Remove="Data\Models\LoginModel.cs~RF19c89709.TMP" />
+    <None Remove="Data\Models\MicroItem.cs~RF19dbbf55.TMP" />
+    <None Remove="Data\Models\MicroItem.cs~RF4eeaadb.TMP" />
+    <None Remove="Data\Models\RegisterModel.cs~RF19c939d1.TMP" />
+    <None Remove="Data\Models\UserProfile.cs~RF202fdd26.TMP" />
     <None Remove="Data\InvalidResponseException.cs~RF3bc2ba9.TMP" />
     <None Remove="Data\NotAuthenticatedException.cs~RF1641bb62.TMP" />
     <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />

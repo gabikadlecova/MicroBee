@@ -12,7 +12,7 @@ namespace MicroBee.Web.DAL.Entities
 	    public decimal Price { get; set; }
 		public ItemCategory Category { get; set; }
 		public ItemStatus Status { get; set; }
-		public string ImageAddress { get; set; }
+		public int? ImageId { get; set; }
 
 		[Required]
 		public string OwnerName { get; set; }

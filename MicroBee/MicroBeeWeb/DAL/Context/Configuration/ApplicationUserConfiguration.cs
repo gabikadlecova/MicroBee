@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MicroBee.Web.DAL.Context.Configuration
 {
-	public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+	class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 	{
 		public void Configure(EntityTypeBuilder<ApplicationUser> builder)
 		{

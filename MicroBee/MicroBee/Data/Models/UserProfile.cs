@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MicroBee.Data.Entities
+namespace MicroBee.Data.Models
 {
 	public class UserProfile
 	{

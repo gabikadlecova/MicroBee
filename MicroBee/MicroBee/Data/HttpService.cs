@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using MicroBee.Data.Models;
 using Newtonsoft.Json;
 using Xamarin.Essentials;
 
@@ -19,7 +20,8 @@ namespace MicroBee.Data
 		private string LoginPath { get; }
 		private string RegisterPath { get; }
 
-		private bool Authenticated { get; set; }
+		public bool Authenticated { get; private set; }
+		
 
 		public HttpService(string host, string loginPath, string registerPath)
 		{
@@ -36,23 +38,13 @@ namespace MicroBee.Data
 		{
 			Logout();
 
-			var model = new
+			LoginModel model = new LoginModel()
 			{
 				Username = username,
 				Password = password
 			};
 
-			string json = JsonConvert.SerializeObject(model);
-			HttpContent content = new StringContent(json);
-			content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-
-			var response = await _client.PostAsync(LoginPath, content);
-			if (!response.IsSuccessStatusCode)
-			{
-				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
-			}
-
-			JwtToken token = JsonConvert.DeserializeObject<JwtToken>(response.Content.ToString());
+			JwtToken token = await PostAsync<LoginModel, JwtToken>(LoginPath, model);
 			await SetCredentialsAsync(username, password, token);
 
 			Authenticated = true;
@@ -72,30 +64,20 @@ namespace MicroBee.Data
 		{
 			Logout();
 
-			var model = new
+			RegisterModel model = new RegisterModel()
 			{
 				Username = username,
 				Password = password,
 				Email = email
 			};
 
-			string json = JsonConvert.SerializeObject(model);
-			HttpContent content = new StringContent(json);
-			content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-
-			var response = await _client.PostAsync(RegisterPath, content);
-			if (!response.IsSuccessStatusCode)
-			{
-				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
-			}
-
-			JwtToken token = JsonConvert.DeserializeObject<JwtToken>(response.Content.ToString());
+			JwtToken token = await PostAsync<RegisterModel, JwtToken>(RegisterPath, model);
 			await SetCredentialsAsync(username, password, token);
 
 			Authenticated = true;
 		}
 
-		public async Task<T> GetAsync<T>(string path, List<KeyValuePair<string, object>> parameters, bool authorize = false)
+		public async Task<T> GetAsync<T>(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
 			{
@@ -113,28 +95,17 @@ namespace MicroBee.Data
 			return JsonConvert.DeserializeObject<T>(response.Content.ToString());
 		}
 
-		public async Task PostAsync<T>(string path, List<KeyValuePair<string, object>> parameters, T item, bool authorize = false)
+		public async Task PostAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
-			if (authorize)
-			{
-				await CheckTokenLifetimeAsync();
-			}
-
-			Uri uri = new Uri(CreateUri(path, parameters));
-
-			string json = JsonConvert.SerializeObject(item);
-			HttpContent content = new StringContent(json);
-			content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-
-			var response = await _client.PostAsync(uri, content);
-
-			if (!response.IsSuccessStatusCode)
-			{
-				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
-			}
+			await PostAsyncInternal(path, item, parameters, authorize);
 		}
-
-		public async Task PutAsync<T>(string path, List<KeyValuePair<string, object>> parameters, T item, bool authorize = false)
+		public async Task<TRes> PostAsync<T, TRes>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
+		{
+			var resultString = await PostAsyncInternal(path, item, parameters, authorize);
+			return JsonConvert.DeserializeObject<TRes>(resultString);
+		}
+		
+		public async Task PutAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
 			{
@@ -155,7 +126,7 @@ namespace MicroBee.Data
 			}
 		}
 
-		public async Task DeleteAsync<TKey>(string path, List<KeyValuePair<string, object>> parameters, TKey id, bool authorize = false)
+		public async Task DeleteAsync<TKey>(string path, TKey id, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
 			{
@@ -172,6 +143,30 @@ namespace MicroBee.Data
 			}
 		}
 
+
+		private async Task<string> PostAsyncInternal<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
+		{
+			if (authorize)
+			{
+				await CheckTokenLifetimeAsync();
+			}
+
+			Uri uri = new Uri(CreateUri(path, parameters));
+
+			string json = JsonConvert.SerializeObject(item);
+			HttpContent content = new StringContent(json);
+			content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+			var response = await _client.PostAsync(uri, content);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
+			}
+
+			return response.Content.ToString();
+		}
+
 		private async Task CheckTokenLifetimeAsync()
 		{
 			if (!Authenticated)
@@ -181,7 +176,7 @@ namespace MicroBee.Data
 
 			var dateString = await SecureStorage.GetAsync("token_expire");
 			DateTime expireDateTime = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
-			
+
 			if (DateTime.Now + _timeEpsilon > expireDateTime)
 			{
 				string username = await SecureStorage.GetAsync("username");

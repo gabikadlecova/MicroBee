@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using MicroBee.Data.Models;
 
 namespace MicroBee.Data
 {
 	class MicroItemService : IMicroItemService
 	{
-		private string HostName { get; }
-
 		private HttpService Service { get; }
 
 		public MicroItemService(string hostName, HttpService service)
 		{
-			HostName = hostName;
 			Service = service;
 		}
 
 		public async Task<MicroItem> GetMicroItemAsync(int id)
 		{
-			return await Service.GetAsync<MicroItem>("api/items/" + id, null);
+			return await Service.GetAsync<MicroItem>("api/items/" + id);
 		}
 
 		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize)
@@ -33,7 +26,7 @@ namespace MicroBee.Data
 				new KeyValuePair<string, object>("pageSize", pageSize)
 			};
 
-			return await Service.GetAsync<List<MicroItem>>(HostName + "api/items/", parameters);
+			return await Service.GetAsync<List<MicroItem>>("api/items/", parameters);
 		}
 
 		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize, string category)
@@ -45,29 +38,61 @@ namespace MicroBee.Data
 				new KeyValuePair<string, object>("category", category)
 			};
 
-			return await Service.GetAsync<List<MicroItem>>(HostName + "api/items/", parameters);
+			return await Service.GetAsync<List<MicroItem>>("api/items/", parameters);
 		}
 
 		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize, string category, string titleFilter)
 		{
-			throw new NotImplementedException();
+			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>()
+			{
+				new KeyValuePair<string, object>("pageNumber", pageNumber),
+				new KeyValuePair<string, object>("pageSize", pageSize),
+				new KeyValuePair<string, object>("category", category),
+				new KeyValuePair<string, object>("titlefilter", titleFilter)
+			};
+
+			return await Service.GetAsync<List<MicroItem>>("api/items/", parameters);
+		}
+		
+
+		public async Task AddMicroItemAsync(MicroItem item, byte[] image = null)
+		{
+			// result id needed in order to assign image
+			MicroItem resultItem = await Service.PostAsync<MicroItem, MicroItem>("api/items/", item, authorize: true);
+			if (image != null)
+			{
+				await Service.PostAsync("api/items/image/" + resultItem.Id, image, authorize: true);
+			}
 		}
 
-		public async Task AddMicroItemAsync(MicroItem item)
+		public async Task UpdateMicroItemAsync(MicroItem item, byte[] image = null)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task UpdateMicroItemAsync(MicroItem item)
-		{
-			throw new NotImplementedException();
+			await Service.PutAsync("api/items/", item, authorize: true);
+			if (image != null)
+			{
+				await Service.PostAsync("api/items/image/" + item.Id, image, authorize: true);
+			}
 		}
 
 		public async Task DeleteMicroItemAsync(int id)
 		{
-			throw new NotImplementedException();
+			await Service.DeleteAsync("api/items/", id, authorize: true);
+		}
+
+		public async Task SetAsWorkerAsync(int itemId)
+		{
+			await Service.PostAsync("api/items/worker/", itemId, authorize: true);
+		}
+
+		public async Task<List<ItemCategory>> GetCategoriesAsync()
+		{
+			return await Service.GetAsync<List<ItemCategory>>("api/items/categories");
+		}
+
+		public async Task<byte[]> GetImageAsync(int id)
+		{
+			return await Service.GetAsync<byte[]>("api/items/image/" + id);
 		}
 		
-		//todo categories
 	}
 }

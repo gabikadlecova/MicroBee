@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace MicroBee.Web.Controllers
 {
 	[Route("api/[controller]")]
-    public class ItemsController : Controller
+	public class ItemsController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IMicroItemService _itemService;
@@ -30,29 +30,29 @@ namespace MicroBee.Web.Controllers
 		}
 
 
-        // GET api/items
-		
-        [HttpGet]
-        public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize)
+		// GET api/items
+
+		[HttpGet]
+		public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize)
 		{
 			// returns only items which have no worker user assigned
 			return _itemService.GetOpenItems(pageNumber, pageSize).ToList();
 		}
 
-        // GET api/items/id
-		
-        [HttpGet("detail/{id}")]
-        public async Task<ActionResult<MicroItem>> Get(int id)
-        {
+		// GET api/items/itemId
+
+		[HttpGet("detail/{itemId}")]
+		public async Task<ActionResult<MicroItem>> Get(int id)
+		{
 			var item = await _itemService.FindItemAsync(id);
 
-	        if (item == null)
-	        {
-		        return NotFound();
-	        }
+			if (item == null)
+			{
+				return NotFound();
+			}
 
-	        return Ok(item);
-        }
+			return Ok(item);
+		}
 
 		// GET api/items/category
 		[HttpGet("{category}")]
@@ -64,75 +64,75 @@ namespace MicroBee.Web.Controllers
 		// POST api/items
 		[HttpPost]
 		[Authorize]
-        public async Task<IActionResult> Post([FromBody]MicroItem model)
-        {
-	        string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-	        if (id == null)
-	        {
-		        return Unauthorized();
-	        }
+		public async Task<IActionResult> Post([FromBody]MicroItem model)
+		{
+			string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (id == null)
+			{
+				return Unauthorized();
+			}
 
-	        if (!ModelState.IsValid)
-	        {
-		        return BadRequest();
-	        }
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
 
-	        var user = await _userManager.FindByIdAsync(id);
-	        model.OwnerName = user.UserName;
-	        model.WorkerName = null;
+			var user = await _userManager.FindByIdAsync(id);
+			model.OwnerName = user.UserName;
+			model.WorkerName = null;
 
 			var item = await _itemService.InsertItemAsync(model);
-	        if (item == null)
-	        {
-		        return BadRequest();
-	        }
+			if (item == null)
+			{
+				return BadRequest();
+			}
 
-	        return Ok();
-        }
+			return Ok(item);
+		}
 
-        // PUT api/items/id
-        [HttpPut]
+		// PUT api/items/itemId
+		[HttpPut]
 		[Authorize]
-        public async Task<IActionResult> Put([FromBody]MicroItem model)
-        {
-	        if (!ModelState.IsValid)
-	        {
-		        return BadRequest();
-	        }
-			
+		public async Task<IActionResult> Put([FromBody]MicroItem model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
 
-	        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-	        if (userId == null)
-	        {
-		        return Unauthorized();
-	        }
 
-	        if (!await IsUserOwnerAsync(userId, model.Id))
-	        {
-		        return Forbid();
-	        }
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			if (!await IsUserOwnerAsync(userId, model.Id))
+			{
+				return Forbid();
+			}
 
 			MicroItem oldItem = await _itemService.FindItemAsync(model.Id);
 
 			// assigning to properties which are allowed to be modified
-	        oldItem.Category = model.Category;
-	        oldItem.Description = model.Description;
-	        oldItem.Price = model.Price;
-	        oldItem.Title = model.Title;
+			oldItem.Category = model.Category;
+			oldItem.Description = model.Description;
+			oldItem.Price = model.Price;
+			oldItem.Title = model.Title;
 
 			var item = await _itemService.UpdateItemAsync(oldItem);
-	        if (item == null)
-	        {
-		        return BadRequest();
-	        }
+			if (item == null)
+			{
+				return BadRequest();
+			}
 
-	        return NoContent();
-        }
+			return NoContent();
+		}
 
-		// PUT api/items/id
+		// PUT api/items/worker/itemId
 		[HttpPost("worker")]
 		[Authorize]
-		public async Task<IActionResult> Worker(int id)
+		public async Task<IActionResult> Worker(int itemId)
 		{
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
@@ -143,13 +143,13 @@ namespace MicroBee.Web.Controllers
 			var user = await _userManager.FindByIdAsync(userId);
 
 			// owner cannot be worker!
-			bool isOwner = await IsUserOwnerAsync(userId, id);
+			bool isOwner = await IsUserOwnerAsync(userId, itemId);
 			if (isOwner)
 			{
 				return BadRequest();
 			}
 
-			MicroItem oldItem = await _itemService.FindItemAsync(id);
+			MicroItem oldItem = await _itemService.FindItemAsync(itemId);
 			oldItem.WorkerName = user.UserName;
 
 			var item = await _itemService.UpdateItemAsync(oldItem);
@@ -161,10 +161,10 @@ namespace MicroBee.Web.Controllers
 			return Ok();
 		}
 
-		// DELETE api/items/id
-		[HttpDelete("{id}")]
+		// DELETE api/items/itemId
+		[HttpDelete("{itemId}")]
 		[Authorize]
-        public async Task<IActionResult> Delete(int id)
+		public async Task<IActionResult> Delete(int itemId)
 		{
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
@@ -172,15 +172,15 @@ namespace MicroBee.Web.Controllers
 				return Unauthorized();
 			}
 
-			bool isOwner = await IsUserOwnerAsync(userId, id);
+			bool isOwner = await IsUserOwnerAsync(userId, itemId);
 			if (!isOwner)
 			{
 				return Forbid();
 			}
 
-			
-			await _itemService.DeleteItemAsync(id);
-			return Ok("Item was deleted.");
+			await DeleteImage(itemId);
+			await _itemService.DeleteItemAsync(itemId);
+			return Ok();
 		}
 
 		[HttpGet("categories")]
@@ -192,18 +192,18 @@ namespace MicroBee.Web.Controllers
 		[HttpGet("image/{imageId}")]
 		public async Task<IActionResult> Image(int imageId)
 		{
-			var item = await _imageService.FindImageAsync(imageId);
-			if (item == null)
+			var image = await _imageService.FindImageAsync(imageId);
+			if (image == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(item);
-;		}
+			return Ok(image.Data);
+		}
 
-		[HttpPost("detail/image/{itemId}")]
+		[HttpPost("image/{itemId}")]
 		[Authorize]
-		public async Task<IActionResult> UpdateImage(int itemId, [FromBody]ItemImage image)
+		public async Task<IActionResult> PostImage(int itemId, [FromBody]byte[] imageData)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -224,16 +224,25 @@ namespace MicroBee.Web.Controllers
 
 			var item = await _itemService.FindItemAsync(itemId);
 
-			if (item.ImageAddress == null)
+
+			if (item.ImageId == null)
 			{
-				var uploaded = await _imageService.InsertImageAsync(image);
+				var uploaded = await _imageService.InsertImageAsync(new ItemImage() { Data = imageData });
 				if (uploaded != null)
 				{
+					item.ImageId = uploaded.Id;
+					await _itemService.UpdateItemAsync(item);
+
 					return CreatedAtAction("Image", uploaded.Id);
 				}
 			}
 			else
 			{
+				ItemImage image = new ItemImage()
+				{
+					Id = item.ImageId.Value,
+					Data = imageData
+				};
 				var updated = await _imageService.UpdateImageAsync(image);
 				if (updated != null)
 				{
@@ -244,6 +253,36 @@ namespace MicroBee.Web.Controllers
 			return BadRequest();
 		}
 
+		// DELETE api/items/image/itemId
+		[HttpDelete("image/{itemId}")]
+		[Authorize]
+		public async Task<IActionResult> DeleteImage(int itemId)
+		{
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			bool isOwner = await IsUserOwnerAsync(userId, itemId);
+			if (!isOwner)
+			{
+				return Forbid();
+			}
+
+			var item = await _itemService.FindItemAsync(itemId);
+			if (item.ImageId == null)
+			{
+				return BadRequest();
+			}
+
+			var deleteTask = _imageService.DeleteImageAsync(item.ImageId.Value);
+			item.ImageId = null;
+			await _itemService.UpdateItemAsync(item);
+			await deleteTask;
+
+			return Ok();
+		}
 
 		private async Task<bool> IsUserOwnerAsync(string userId, int itemId)
 		{
@@ -254,5 +293,5 @@ namespace MicroBee.Web.Controllers
 
 			return userName == item?.OwnerName;
 		}
-    }
+	}
 }
