@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using MicroBee.Annotations;
 using MicroBee.Data.Models;
 using Xamarin.Forms;
 
@@ -20,8 +19,7 @@ namespace MicroBee.ViewModels
 	    {
 		    Items = new InfiniteItemCollection(App.Service);
 	    }
-
-	    [NotifyPropertyChangedInvocator]
+		
 	    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 	    {
 		    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

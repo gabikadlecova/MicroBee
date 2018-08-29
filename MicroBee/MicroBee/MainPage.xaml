@@ -10,7 +10,7 @@
 	</ContentPage.BindingContext>
 
 	<StackLayout>		 
-		<Label>Prrr</Label>
+		<Label>Micro jobs</Label>
 		<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Items}" >
 			<ListView.Behaviors>
 				<extended:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
@@ -22,9 +22,10 @@
 						<StackLayout Orientation="Horizontal">
 							<Image Source="{Binding ItemImage}" />
 							<StackLayout>
-								<Label Text="{Binding  Item.Title}" />
-								<Label Text="{Binding Item.Description}" />
+								<Label Text="{Binding  Item.Title}" FontAttributes="Bold" />
+								<Label Text="{Binding Item.OwnerName, StringFormat=User: {0}}" />
 							</StackLayout>
+							<Label Text="{Binding Item.Description}"/>
 						</StackLayout>
 					</ViewCell>
 				</DataTemplate>

@@ -21,7 +21,7 @@ namespace MicroBee.Data
 		private string RegisterPath { get; }
 
 		public bool Authenticated { get; private set; }
-		
+
 
 		public HttpService(string host, string loginPath, string registerPath)
 		{
@@ -79,6 +79,17 @@ namespace MicroBee.Data
 
 		public async Task<T> GetAsync<T>(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
+			var content = await GetAsyncInternal(path, parameters, authorize);
+			return JsonConvert.DeserializeObject<T>(await content.ReadAsStringAsync());
+		}
+		public async Task<byte[]> GetByteArrayAsync(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
+		{
+			var content = await GetAsyncInternal(path, parameters, authorize);
+			return await content.ReadAsByteArrayAsync();
+		}
+
+		public async Task PostAsync(string path, byte[] item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
+		{
 			if (authorize)
 			{
 				await CheckTokenLifetimeAsync();
@@ -86,13 +97,13 @@ namespace MicroBee.Data
 
 			Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
 
-			var response = await _client.GetAsync(uri);
+			HttpContent content = new ByteArrayContent(item);
+			var response = await _client.PostAsync(uri, content);
+
 			if (!response.IsSuccessStatusCode)
 			{
 				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
 			}
-
-			return JsonConvert.DeserializeObject<T>(response.Content.ToString());
 		}
 
 		public async Task PostAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
@@ -104,7 +115,7 @@ namespace MicroBee.Data
 			var resultString = await PostAsyncInternal(path, item, parameters, authorize);
 			return JsonConvert.DeserializeObject<TRes>(resultString);
 		}
-		
+
 		public async Task PutAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
@@ -143,6 +154,23 @@ namespace MicroBee.Data
 			}
 		}
 
+		private async Task<HttpContent> GetAsyncInternal(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
+		{
+			if (authorize)
+			{
+				await CheckTokenLifetimeAsync();
+			}
+
+			Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
+
+			var response = await _client.GetAsync(uri);
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
+			}
+
+			return response.Content;
+		}
 
 		private async Task<string> PostAsyncInternal<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
@@ -164,7 +192,7 @@ namespace MicroBee.Data
 				throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
 			}
 
-			return response.Content.ToString();
+			return await response.Content.ReadAsStringAsync();
 		}
 
 		private async Task CheckTokenLifetimeAsync()
@@ -192,6 +220,8 @@ namespace MicroBee.Data
 			await SecureStorage.SetAsync("password", password);
 			await SecureStorage.SetAsync("token", token.TokenString);
 			await SecureStorage.SetAsync("token_expire", token.ExpireDateTime.ToString(CultureInfo.InvariantCulture));
+
+			_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.TokenString);
 		}
 
 		private string CreateUri(string path, List<KeyValuePair<string, object>> parameters)

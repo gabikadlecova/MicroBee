@@ -91,7 +91,7 @@ namespace MicroBee.Data
 
 		public async Task<byte[]> GetImageAsync(int id)
 		{
-			return await Service.GetAsync<byte[]>("api/items/image/" + id);
+			return await Service.GetByteArrayAsync("api/items/image/" + id);
 		}
 		
 	}
