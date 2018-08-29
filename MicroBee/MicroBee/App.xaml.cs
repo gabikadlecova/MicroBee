@@ -8,7 +8,8 @@ namespace MicroBee
 {
 	public partial class App : Application
 	{
-		//public static IMicroItemService Service = new MicroItemService("http://localhost:56632/");
+		public static readonly IMicroItemService Service = new MicroItemService(new HttpService("http://localhost:56632/", "api/account/login/", "api/account/register/"));
+
 		public App ()
 		{
 			InitializeComponent();

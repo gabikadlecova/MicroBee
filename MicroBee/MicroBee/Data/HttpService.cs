@@ -84,7 +84,7 @@ namespace MicroBee.Data
 				await CheckTokenLifetimeAsync();
 			}
 
-			Uri uri = new Uri(CreateUri(path, parameters));
+			Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
 
 			var response = await _client.GetAsync(uri);
 			if (!response.IsSuccessStatusCode)
@@ -112,7 +112,7 @@ namespace MicroBee.Data
 				await CheckTokenLifetimeAsync();
 			}
 
-			Uri uri = new Uri(CreateUri(path, parameters));
+			Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
 
 			string json = JsonConvert.SerializeObject(item);
 			HttpContent content = new StringContent(json);
@@ -133,7 +133,7 @@ namespace MicroBee.Data
 				await CheckTokenLifetimeAsync();
 			}
 
-			Uri uri = new Uri(CreateUri(path + id, parameters));
+			Uri uri = new Uri(CreateUri(path + id, parameters), UriKind.Relative);
 
 			var response = await _client.DeleteAsync(uri);
 
@@ -151,7 +151,7 @@ namespace MicroBee.Data
 				await CheckTokenLifetimeAsync();
 			}
 
-			Uri uri = new Uri(CreateUri(path, parameters));
+			Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
 
 			string json = JsonConvert.SerializeObject(item);
 			HttpContent content = new StringContent(json);
@@ -214,7 +214,7 @@ namespace MicroBee.Data
 			}
 
 			// remove last '&'
-			_builder.Remove(_builder.Length - 2, 1);
+			_builder.Remove(_builder.Length - 1, 1);
 
 			return _builder.ToString();
 		}

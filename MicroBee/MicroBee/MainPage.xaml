@@ -2,18 +2,28 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MicroBee"
+             xmlns:extended="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
+             xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              x:Class="MicroBee.MainPage">
+	<ContentPage.BindingContext>
+		<viewModels:ItemsViewModel x:Name="Model"/>
+	</ContentPage.BindingContext>
 
-	<StackLayout>
-		<ListView x:Name="ItemList" >
+	<StackLayout>		 
+		<Label>Prrr</Label>
+		<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Items}" >
+			<ListView.Behaviors>
+				<extended:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
+			</ListView.Behaviors>
+
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
 						<StackLayout Orientation="Horizontal">
-							<!--<Image Source="{Binding Image}" />-->
+							<Image Source="{Binding ItemImage}" />
 							<StackLayout>
-								<Label Text="{Binding Title}" />
-								<Label Text="{Binding Description}" />
+								<Label Text="{Binding  Item.Title}" />
+								<Label Text="{Binding Item.Description}" />
 							</StackLayout>
 						</StackLayout>
 					</ViewCell>

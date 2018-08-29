@@ -8,7 +8,7 @@ namespace MicroBee.Data
 	{
 		private HttpService Service { get; }
 
-		public MicroItemService(string hostName, HttpService service)
+		public MicroItemService(HttpService service)
 		{
 			Service = service;
 		}
@@ -86,7 +86,7 @@ namespace MicroBee.Data
 
 		public async Task<List<ItemCategory>> GetCategoriesAsync()
 		{
-			return await Service.GetAsync<List<ItemCategory>>("api/items/categories");
+			return await Service.GetAsync<List<ItemCategory>>("api/items/categories/");
 		}
 
 		public async Task<byte[]> GetImageAsync(int id)

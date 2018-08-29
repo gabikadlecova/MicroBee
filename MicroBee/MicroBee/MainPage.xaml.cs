@@ -10,6 +10,7 @@ namespace MicroBee
 {
 	public partial class MainPage : ContentPage
 	{
+
 		public MainPage()
 		{
 			InitializeComponent();
@@ -17,8 +18,7 @@ namespace MicroBee
 
 		protected override async void OnAppearing()
 		{
-			//var itemTask = App.Service.GetMicroItemsAsync();
-			//itemList.ItemsSource = await itemTask;
+			await Model.Items.LoadMoreAsync();
 		}
 	}
 }
