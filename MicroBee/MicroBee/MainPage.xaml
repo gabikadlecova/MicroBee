@@ -4,33 +4,41 @@
              xmlns:local="clr-namespace:MicroBee"
              xmlns:extended="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
+             xmlns:models="clr-namespace:MicroBee.Data.Models;assembly=MicroBee"
              x:Class="MicroBee.MainPage">
 	<ContentPage.BindingContext>
 		<viewModels:ItemsViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
 
-	<StackLayout>		 
+	<StackLayout>
 		<Label>Micro jobs</Label>
-		<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Items}" >
+		<Label Text="{Binding SelectedCategory}"/>
+
+		<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}">
 			<ListView.Behaviors>
 				<extended:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
 			</ListView.Behaviors>
 
+			<ListView.Header>
+				<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
+						SelectedItem="{Binding SelectedCategory}" />
+			</ListView.Header>
+			
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
 						<StackLayout Orientation="Horizontal">
-							<Image Source="{Binding ItemImage}" />
+							<Image Source="{Binding ItemImage.Source}" />
 							<StackLayout>
-								<Label Text="{Binding  Item.Title}" FontAttributes="Bold" />
-								<Label Text="{Binding Item.OwnerName, StringFormat=User: {0}}" />
+								<Label Text="{Binding Item.Title}" FontAttributes="Bold" />
+								<Label Text="{Binding Item.OwnerName, StringFormat='User: {0}'}" />
+								<Label Text="{Binding Item.Category.Name, StringFormat='Category: {0}'}" FontAttributes="Italic"/>
 							</StackLayout>
-							<Label Text="{Binding Item.Description}"/>
 						</StackLayout>
 					</ViewCell>
 				</DataTemplate>
 			</ListView.ItemTemplate>
-		</ListView>	
+		</ListView>
 	</StackLayout>
 
 </ContentPage>

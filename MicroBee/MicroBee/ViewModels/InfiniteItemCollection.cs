@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MicroBee.Data;
 using MicroBee.Data.Models;
@@ -16,7 +19,17 @@ namespace MicroBee.ViewModels
 	{
 		private readonly IMicroItemService _service;
 		private int _currentPage;
-		public int PageSize { get; set; }
+
+		private int _pageSize;
+		public int PageSize
+		{
+			get => _pageSize;
+			set
+			{
+				_pageSize = value;
+				Reset();
+			}
+		}
 
 		private ItemCategory _category;
 
@@ -33,15 +46,16 @@ namespace MicroBee.ViewModels
 		public InfiniteItemCollection(IMicroItemService service)
 		{
 			_service = service;
-
-			PageSize = 10;
+			_pageSize = 10;
 			CanLoadMore = true;
 		}
 
-		public void Reset()
+		public async void Reset()
 		{
 			_currentPage = 0;
-			Items.Clear();
+			ClearItems();
+			CanLoadMore = true;
+			await LoadMoreAsync();
 		}
 
 		public async Task LoadMoreAsync()
@@ -49,7 +63,16 @@ namespace MicroBee.ViewModels
 			IsLoadingMore = true;
 			LoadingMore?.Invoke(this, new LoadingMoreEventArgs(true));
 
-			var nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize);
+			List<MicroItem> nextItems = null;
+			if (Category != null)
+			{
+				nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize, Category.Name);
+			}
+			else
+			{
+				nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize);
+			}
+
 			foreach (var item in nextItems)
 			{
 				Image image = null;
@@ -75,10 +98,8 @@ namespace MicroBee.ViewModels
 		public bool CanLoadMore { get; private set; }
 		public bool IsLoadingMore { get; private set; }
 		public event EventHandler<LoadingMoreEventArgs> LoadingMore;
-
-
 	}
-	struct InfiniteItemElement
+	class InfiniteItemElement
 	{
 		public MicroItem Item { get; set; }
 		public Image ItemImage { get; set; }

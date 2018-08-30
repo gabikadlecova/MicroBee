@@ -11,7 +11,7 @@ using Xamarin.Essentials;
 
 namespace MicroBee.Data
 {
-	class HttpService
+	public class HttpService
 	{
 		private readonly HttpClient _client;
 		private readonly StringBuilder _builder = new StringBuilder();
@@ -21,6 +21,7 @@ namespace MicroBee.Data
 		private string RegisterPath { get; }
 
 		public bool Authenticated { get; private set; }
+		public string Username { get; private set; }
 
 
 		public HttpService(string host, string loginPath, string registerPath)
@@ -34,45 +35,35 @@ namespace MicroBee.Data
 			Authenticated = false;
 		}
 
-		public async Task LoginAsync(string username, string password)
+		public async Task LoginAsync(LoginModel model)
 		{
 			Logout();
 
-			LoginModel model = new LoginModel()
-			{
-				Username = username,
-				Password = password
-			};
-
 			JwtToken token = await PostAsync<LoginModel, JwtToken>(LoginPath, model);
-			await SetCredentialsAsync(username, password, token);
+			await SetCredentialsAsync(model.Username, model.Password, token);
 
 			Authenticated = true;
 		}
 
 		public void Logout()
 		{
+			Authenticated = false;
+
 			SecureStorage.Remove("username");
+			Username = null;
 			SecureStorage.Remove("password");
 			SecureStorage.Remove("token");
 			SecureStorage.Remove("token_expire");
 
-			Authenticated = false;
+			_client.DefaultRequestHeaders.Authorization = null;
 		}
 
-		public async Task RegisterAsync(string username, string email, string password)
+		public async Task RegisterAsync(RegisterModel model)
 		{
 			Logout();
 
-			RegisterModel model = new RegisterModel()
-			{
-				Username = username,
-				Password = password,
-				Email = email
-			};
-
 			JwtToken token = await PostAsync<RegisterModel, JwtToken>(RegisterPath, model);
-			await SetCredentialsAsync(username, password, token);
+			await SetCredentialsAsync(model.Username, model.Password, token);
 
 			Authenticated = true;
 		}
@@ -210,13 +201,15 @@ namespace MicroBee.Data
 				string username = await SecureStorage.GetAsync("username");
 				string password = await SecureStorage.GetAsync("password");
 
-				await LoginAsync(username, password);
+				LoginModel model = new LoginModel() { Username = username, Password = password };
+				await LoginAsync(model);
 			}
 		}
 
 		private async Task SetCredentialsAsync(string username, string password, JwtToken token)
 		{
 			await SecureStorage.SetAsync("username", username);
+			Username = username;
 			await SecureStorage.SetAsync("password", password);
 			await SecureStorage.SetAsync("token", token.TokenString);
 			await SecureStorage.SetAsync("token_expire", token.ExpireDateTime.ToString(CultureInfo.InvariantCulture));

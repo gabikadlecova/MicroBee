@@ -117,7 +117,7 @@ namespace MicroBee.Web.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public async Task<IActionResult> UpdateProfile([FromBody]UserProfileModel model)
+		public async Task<IActionResult> Update([FromBody]UserProfileModel model)
 		{
 			string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (id == null)

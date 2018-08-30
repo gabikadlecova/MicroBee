@@ -4,25 +4,54 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Input;
 using MicroBee.Data.Models;
 using Xamarin.Forms;
 
 namespace MicroBee.ViewModels
 {
-    class ItemsViewModel : INotifyPropertyChanged
-    {
-	    public event PropertyChangedEventHandler PropertyChanged;
-		
-		public InfiniteItemCollection Items { get; }
+	class ItemsViewModel : INotifyPropertyChanged
+	{
+		public event PropertyChangedEventHandler PropertyChanged;
 
-	    public ItemsViewModel()
-	    {
-		    Items = new InfiniteItemCollection(App.Service);
-	    }
+		public InfiniteItemCollection Items { get; }
 		
-	    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-	    {
-		    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	    }
-    }
+		public ItemCategory SelectedCategory
+		{
+			get => Items.Category;
+			set
+			{
+				Items.Category = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private IList<ItemCategory> _categories;
+		public IList<ItemCategory> Categories
+		{
+			get => _categories;
+			set
+			{
+				_categories = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ItemsViewModel()
+		{
+			Items = new InfiniteItemCollection(App.ItemService);
+		}
+
+
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public ICommand RefreshCommand => new Command(async () =>
+		{
+			Items.Reset();
+			await Items.LoadMoreAsync();
+		});
+	}
 }

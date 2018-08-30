@@ -34,11 +34,10 @@ namespace MicroBee.Data
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>()
 			{
 				new KeyValuePair<string, object>("pageNumber", pageNumber),
-				new KeyValuePair<string, object>("pageSize", pageSize),
-				new KeyValuePair<string, object>("category", category)
+				new KeyValuePair<string, object>("pageSize", pageSize)
 			};
 
-			return await Service.GetAsync<List<MicroItem>>("api/items/", parameters);
+			return await Service.GetAsync<List<MicroItem>>("api/items/" + category, parameters);
 		}
 
 		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize, string category, string titleFilter)
@@ -47,11 +46,10 @@ namespace MicroBee.Data
 			{
 				new KeyValuePair<string, object>("pageNumber", pageNumber),
 				new KeyValuePair<string, object>("pageSize", pageSize),
-				new KeyValuePair<string, object>("category", category),
 				new KeyValuePair<string, object>("titlefilter", titleFilter)
 			};
 
-			return await Service.GetAsync<List<MicroItem>>("api/items/", parameters);
+			return await Service.GetAsync<List<MicroItem>>("api/items/" + category, parameters);
 		}
 		
 
