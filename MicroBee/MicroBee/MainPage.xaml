@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MicroBee"
-             xmlns:extended="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
+             xmlns:scroll="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              xmlns:models="clr-namespace:MicroBee.Data.Models;assembly=MicroBee"
              x:Class="MicroBee.MainPage">
@@ -14,9 +14,9 @@
 		<Label>Micro jobs</Label>
 		<Label Text="{Binding SelectedCategory}"/>
 
-		<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}">
+		<ListView ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True" >
 			<ListView.Behaviors>
-				<extended:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
+				<scroll:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
 			</ListView.Behaviors>
 
 			<ListView.Header>
@@ -33,6 +33,7 @@
 								<Label Text="{Binding Item.Title}" FontAttributes="Bold" />
 								<Label Text="{Binding Item.OwnerName, StringFormat='User: {0}'}" />
 								<Label Text="{Binding Item.Category.Name, StringFormat='Category: {0}'}" FontAttributes="Italic"/>
+								<Label Text="{Binding Item.Description}" LineBreakMode="TailTruncation" />
 							</StackLayout>
 						</StackLayout>
 					</ViewCell>

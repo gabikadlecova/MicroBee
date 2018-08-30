@@ -21,6 +21,8 @@
     <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />
     <None Remove="IMicroItemManager.cs~RFe830bc.TMP" />
     <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
+    <None Remove="ItemDetail.xaml.cs~RFea27aa.TMP" />
+    <None Remove="ItemDetail.xaml~RFe85664.TMP" />
     <None Remove="MainPage.xaml.cs~RF36ab923.TMP" />
     <None Remove="MainPage.xaml.cs~RF378cb5f.TMP" />
   </ItemGroup>
@@ -33,13 +35,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ItemDetail.xaml.cs">
-      <DependentUpon>ItemDetail.xaml</DependentUpon>
+    <Compile Update="ItemDetailPage.xaml.cs">
+      <DependentUpon>ItemDetailPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="ItemDetail.xaml">
+    <EmbeddedResource Update="AddItemPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ItemDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ProfilePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="RegisterPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

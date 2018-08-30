@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CarouselPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			  
+
+			 xmlns:local="clr-namespace:MicroBee"
+             xmlns:viewModels="clr-namespace:MicroBee.ViewModels"
+             x:Class="MicroBee.ItemDetail" ItemsSource="{Binding Pages}">
+
+
+	<CarouselPage.ItemTemplate>
+		<DataTemplate>
+			<ContentPage>
+				<StackLayout>
+					<!-- Detail StackLayout (IsEditing == false) -->
+					<StackLayout IsVisible="{Binding IsDetail}">
+						<StackLayout Orientation="Horizontal">
+							<StackLayout>
+								<Label Text="{Binding Item.Title}" LineBreakMode="WordWrap"/>
+								<Label Text="{Binding Item.OwnerName}" />
+								<Label Text="{Binding Item.Category}" FontAttributes="Italic" />
+							</StackLayout>
+							<Image Source="{Binding ItemImage.Source}" />
+						</StackLayout>
+
+						<Label Text="{Binding Item.Description}" />
+						<Button IsVisible="{Binding IsUserOwner}" Command="{Binding EditCommand}"/>
+						<Button IsVisible="{Binding CanAccept}" Command="{Binding AcceptJobCommand}" />
+					</StackLayout>
+
+					<!-- Edit StackLayout (IsEditing == true) -->
+					<StackLayout IsVisible="{Binding IsEditing}">
+						<StackLayout Orientation="Horizontal">
+							<StackLayout>
+								<Entry Text="{Binding Item.Title}" />
+								<Label Text="{Binding Item.OwnerName}" />
+								<Picker ItemsSource="{Binding Item.Category}" ItemDisplayBinding="{Binding Name}" />
+							</StackLayout>
+							<Image Source="{Binding ItemImage.Source}" />
+						</StackLayout>
+
+						<Entry Text="{Binding Item.Description}" />
+						<Button IsVisible="{Binding IsUserOwner}" Command="{Binding SubmitEditCommand}" />
+					</StackLayout>
+				</StackLayout>
+			</ContentPage>
+		</DataTemplate>
+	</CarouselPage.ItemTemplate>
+</CarouselPage>

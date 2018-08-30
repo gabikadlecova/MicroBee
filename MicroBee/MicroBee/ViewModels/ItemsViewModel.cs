@@ -42,7 +42,6 @@ namespace MicroBee.ViewModels
 			Items = new InfiniteItemCollection(App.ItemService);
 		}
 
-
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
