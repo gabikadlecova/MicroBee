@@ -5,6 +5,7 @@
 
 			 xmlns:local="clr-namespace:MicroBee"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels"
+             xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
              x:Class="MicroBee.ItemDetail" ItemsSource="{Binding Pages}">
 
 
@@ -34,9 +35,10 @@
 							<StackLayout>
 								<Entry Text="{Binding Item.Title}" />
 								<Label Text="{Binding Item.OwnerName}" />
-								<Picker ItemsSource="{Binding Item.Category}" ItemDisplayBinding="{Binding Name}" />
+								<Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/> <!--TODO another property with logic-->
 							</StackLayout>
 							<Image Source="{Binding ItemImage.Source}" />
+							<Button IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Command="{Binding ChooseImageCommand}"/>
 						</StackLayout>
 
 						<Entry Text="{Binding Item.Description}" />

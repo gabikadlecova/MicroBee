@@ -20,9 +20,8 @@ namespace MicroBee
 			InitializeComponent ();
 		}
 
-		protected override async void OnAppearing()
+		protected override void OnAppearing()
 		{
-			Pages = new ObservableCollection<DetailViewModel>();
 			BindingContext = this;
 		}
 	}
