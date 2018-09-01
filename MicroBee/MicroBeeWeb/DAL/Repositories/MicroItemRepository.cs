@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MicroBee.Web.DAL.Context;
 using MicroBee.Web.DAL.Entities;
@@ -45,9 +46,16 @@ namespace MicroBee.Web.DAL.Repositories
 
 		public async Task<MicroItem> UpdateAsync(MicroItem item)
 		{
+			if (item.Category != null)
+			{
+				var category = await _context.Categories.FindAsync(item.Category.Id);
+				item.Category = category;
+			}
+
 			var updated = _context.MicroItems.Update(item);
 			await _context.SaveChangesAsync();
 			return updated.Entity;
+
 		}
 	}
 }

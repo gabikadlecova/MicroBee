@@ -75,14 +75,16 @@ namespace MicroBee.ViewModels
 
 			foreach (var item in nextItems)
 			{
-				Image image = null;
+				ImageSource imageData = null;
 				if (item.ImageId != null)
 				{
-					byte[] imageData = await _service.GetImageAsync(item.ImageId.Value);
-					image = new Image { Source = ImageSource.FromStream(() => new MemoryStream(imageData)) };
+					var imageBytes = await _service.GetImageAsync(item.ImageId.Value);
+					
+					imageData = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+					
 				}
 
-				Add(new InfiniteItemElement() { Item = item, ItemImage = image });
+				Add(new InfiniteItemElement() { Item = item, ItemImage = imageData });
 			}
 
 			_currentPage++;
@@ -102,6 +104,6 @@ namespace MicroBee.ViewModels
 	class InfiniteItemElement
 	{
 		public MicroItem Item { get; set; }
-		public Image ItemImage { get; set; }
+		public ImageSource ItemImage { get; set; }
 	}
 }

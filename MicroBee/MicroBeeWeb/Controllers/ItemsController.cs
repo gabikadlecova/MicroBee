@@ -42,9 +42,9 @@ namespace MicroBee.Web.Controllers
 		// GET api/items/itemId
 
 		[HttpGet("detail/{itemId}")]
-		public async Task<ActionResult<MicroItem>> Get(int id)
+		public async Task<ActionResult<MicroItem>> Get(int itemId)
 		{
-			var item = await _itemService.FindItemAsync(id);
+			var item = await _itemService.FindItemAsync(itemId);
 
 			if (item == null)
 			{
@@ -233,7 +233,7 @@ namespace MicroBee.Web.Controllers
 					item.ImageId = uploaded.Id;
 					await _itemService.UpdateItemAsync(item);
 
-					return CreatedAtAction("Image", uploaded.Id);
+					return Ok();
 				}
 			}
 			else

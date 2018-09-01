@@ -23,6 +23,8 @@
     <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
     <None Remove="ItemDetail.xaml.cs~RFea27aa.TMP" />
     <None Remove="ItemDetail.xaml~RFe85664.TMP" />
+    <None Remove="LoginPage.xaml~RF99a272b.TMP" />
+    <None Remove="LoginPage.xaml~RF9dd63a2.TMP" />
     <None Remove="MainPage.xaml.cs~RF36ab923.TMP" />
     <None Remove="MainPage.xaml.cs~RF378cb5f.TMP" />
   </ItemGroup>

@@ -6,7 +6,7 @@
 			 xmlns:local="clr-namespace:MicroBee"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels"
              xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
-             x:Class="MicroBee.ItemDetail" ItemsSource="{Binding Pages}">
+             x:Class="MicroBee.ItemDetailPage" ItemsSource="{Binding Pages}" SelectedItem="{Binding Selected}">
 
 
 	<CarouselPage.ItemTemplate>
@@ -19,14 +19,12 @@
 							<StackLayout>
 								<Label Text="{Binding Item.Title}" LineBreakMode="WordWrap"/>
 								<Label Text="{Binding Item.OwnerName}" />
-								<Label Text="{Binding Item.Category}" FontAttributes="Italic" />
+								<Label Text="{Binding Item.Category.Name}" FontAttributes="Italic" />
 							</StackLayout>
-							<Image Source="{Binding ItemImage.Source}" />
+							<Image Source="{Binding ItemImage}" />
 						</StackLayout>
-
-						<Label Text="{Binding Item.Description}" />
-						<Button IsVisible="{Binding IsUserOwner}" Command="{Binding EditCommand}"/>
-						<Button IsVisible="{Binding CanAccept}" Command="{Binding AcceptJobCommand}" />
+						<Button x:Name="Button1" IsVisible="{Binding IsUserOwner}" Command="{Binding EditCommand}"/>
+						<Button x:Name="Button2" IsVisible="{Binding CanAccept}" Command="{Binding AcceptJobCommand}" Clicked="Button_OnClicked"/>
 					</StackLayout>
 
 					<!-- Edit StackLayout (IsEditing == true) -->
@@ -37,7 +35,7 @@
 								<Label Text="{Binding Item.OwnerName}" />
 								<Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/> <!--TODO another property with logic-->
 							</StackLayout>
-							<Image Source="{Binding ItemImage.Source}" />
+							<Image Source="{Binding ItemImage}" />
 							<Button IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Command="{Binding ChooseImageCommand}"/>
 						</StackLayout>
 

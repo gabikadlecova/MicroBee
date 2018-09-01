@@ -4,9 +4,15 @@
              x:Class="MicroBee.LoginPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+			<StackLayout>
+				<Label Text="Login"/>
+				<Entry Text="{Binding LoginData.Username}"/>
+			</StackLayout>
+	        <StackLayout>
+				<Label Text="Password" />
+				<Entry IsPassword="True"  Text="{Binding LoginData.Password}"/>
+			</StackLayout>
+			<Button Clicked="LoginSubmitButton_OnClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -15,7 +15,7 @@ namespace MicroBee.Data
 
 		public async Task<MicroItem> GetMicroItemAsync(int id)
 		{
-			return await Service.GetAsync<MicroItem>("api/items/" + id);
+			return await Service.GetAsync<MicroItem>("api/items/detail/" + id);
 		}
 
 		public async Task<List<MicroItem>> GetMicroItemsAsync(int pageNumber, int pageSize)
