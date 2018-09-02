@@ -47,10 +47,23 @@ namespace MicroBee.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		private bool _isRefreshing = false;
+		public bool IsRefreshing
+		{
+			get => _isRefreshing;
+			set
+			{
+				_isRefreshing = value;
+				OnPropertyChanged();
+			}
+		}
 		public ICommand RefreshCommand => new Command(async () =>
 		{
+			IsRefreshing = true;
+
 			Items.Reset();
-			await Items.LoadMoreAsync();
+
+			IsRefreshing = false;
 		});
 	}
 }

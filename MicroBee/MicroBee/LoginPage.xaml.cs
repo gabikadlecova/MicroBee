@@ -12,10 +12,7 @@ namespace MicroBee
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LoginPage : ContentPage
 	{
-		public delegate void LoginSubmitted(object sender, EventArgs e);
-
-		public event LoginSubmitted LoginEventHandler;
-		public LoginModel LoginData { get; set; }
+		public LoginModel LoginData { get; }
 		public LoginPage ()
 		{
 			InitializeComponent ();
@@ -28,9 +25,20 @@ namespace MicroBee
 			bool succeeded = await App.AccountService.LoginAsync(LoginData);
 			if (succeeded)
 			{
-				LoginEventHandler?.Invoke(this, EventArgs.Empty);
 				await Navigation.PopModalAsync();
 			}
+			else
+			{
+				errorLabel.IsVisible = true;
+			}
+		}
+
+		private async void RegisterButton_OnClicked(object sender, EventArgs e)
+		{
+			var page = new RegisterPage();
+			page.RegisterHandler += async () => { await Navigation.PopModalAsync(); };
+			await Navigation.PushModalAsync(page);
+			
 		}
 	}
 }

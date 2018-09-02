@@ -84,6 +84,13 @@ namespace MicroBee.Web.Controllers
 				return BadRequest(ModelState);
 			}
 
+			var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+			if (!signInResult.Succeeded)
+			{
+				ModelState.AddModelError("Password", "Invalid password.");
+				return BadRequest(ModelState);
+			}
+
 			return Ok(CreateJwtToken(user));
 		}
 

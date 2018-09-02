@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MicroBee.Data;
-
-using MicroBee.Data.Models;
+﻿using System.Linq;
 using MicroBee.ViewModels;
 using Xamarin.Forms;
 
@@ -14,34 +6,43 @@ namespace MicroBee
 {
 	public partial class MainPage : ContentPage
 	{
-
 		public MainPage()
 		{
 			InitializeComponent();
+
 			itemListView.ItemSelected += async (object sender, SelectedItemChangedEventArgs e) =>
 			{
-				ItemCarouselPage carouselPage = new ItemCarouselPage()
+				var selectedItem = (InfiniteItemElement)((ListView)sender).SelectedItem;
+				if (selectedItem == null)
 				{
-					Pages = new ObservableCollection<DetailViewModel>(Model.Items.Select(it => new DetailViewModel()
+					return;
+				}
+
+				ItemCarouselPage carouselPage = new ItemCarouselPage();
+				foreach (var element in Model.Items)
+				{
+					carouselPage.Children.Add(new ItemDetailPage()
 					{
-						ImageData = it.ImageData,
-						Categories = Model.Categories,
-						Item = it.Item
-					}))
-				};
-				var selectedItem = (InfiniteItemElement)((ListView) sender).SelectedItem;
-				carouselPage.Selected =
-					carouselPage.Pages.FirstOrDefault(m => m.Item.Id == selectedItem.Item.Id);
+						ItemId = element.Item.Id
+					});
+				}
+
+				carouselPage.CurrentPage =
+					carouselPage.Children.FirstOrDefault(p => ((ItemDetailPage)p).ItemId == selectedItem.Item.Id);
 
 				await Navigation.PushAsync(carouselPage);
-			};
-		}
 
-		protected override async void OnAppearing()
+				itemListView.SelectedItem = null;
+			};
+			
+			Initialize();
+		}
+		
+		private async void Initialize()
 		{
-			Model.Items.Reset();
-			await Model.Items.LoadMoreAsync();
 			Model.Categories = await App.ItemService.GetCategoriesAsync();
+
+			await Model.Items.LoadMoreAsync();
 		}
 		
 	}

@@ -11,11 +11,21 @@ namespace MicroBee.ViewModels
 {
 	public class DetailViewModel : INotifyPropertyChanged
 	{
-		private bool isEditing;
+		public MicroItem Item
+		{
+			get => _item;
+			set
+			{
+				_item = value;
+				OnPropertyChanged();
+			}
+		}
 
-		public MicroItem Item { get; set; }
-		public ImageSource ItemImage => ImageData == null? null : ImageSource.FromStream(() => new MemoryStream(ImageData));
+		public ImageSource ItemImage => ImageData == null ? null : ImageSource.FromStream(() => new MemoryStream(ImageData));
 		private IList<ItemCategory> _categories;
+		private MicroItem _item;
+		private byte[] _imageData;
+
 		public IList<ItemCategory> Categories
 		{
 			get => _categories;
@@ -26,77 +36,22 @@ namespace MicroBee.ViewModels
 			}
 		}
 
-		public bool IsUserOwner => App.UserName == Item.OwnerName;
-		public bool CanAccept => !IsUserOwner && Item.WorkerName == null;
+		public bool IsUserOwner => Item != null && App.UserName == Item.OwnerName;
+		public bool CanAccept => Item != null && !IsUserOwner && Item.WorkerName == null;
 
-		public bool IsEditing
+
+
+		public bool IsImageChanged { get; set; }
+
+		public byte[] ImageData
 		{
-			get => isEditing;
-			private set
+			get => _imageData;
+			set
 			{
-				isEditing = value;
-				OnPropertyChanged();
-				OnPropertyChanged(nameof(IsDetail));
-			}
-		}
-
-		public bool IsDetail
-		{
-			get => !isEditing;
-			private set => IsEditing = !value;
-		}
-
-		public bool IsImageChanged { get; private set; }
-		public byte[] ImageData { get; set; }
-		public ICommand EditCommand => new Command(execute: () => { IsEditing = true; });
-		public ICommand SubmitEditCommand => new Command(execute: async () =>
-		{
-			if (IsImageChanged)
-			{
-				await App.ItemService.UpdateMicroItemAsync(Item, ImageData);
-			}
-			else
-			{
-				await App.ItemService.UpdateMicroItemAsync(Item, null);
-			}
-
-			Item = await App.ItemService.GetMicroItemAsync(Item.Id);
-
-			if (Item.ImageId != null)
-			{
-				ImageData = await App.ItemService.GetImageAsync(Item.ImageId.Value);
+				_imageData = value;
 				OnPropertyChanged(nameof(ItemImage));
 			}
-
-			IsImageChanged = false;
-			IsEditing = false;
-		});
-
-		public ICommand AcceptJobCommand => new Command(execute: async () =>
-		{
-			if (App.IsUserAuthenticated)
-			{
-				await App.ItemService.SetAsWorkerAsync(Item.Id);
-			}
-		});
-
-		public ICommand ChooseImageCommand => new Command(async () =>
-		{
-			var file = await CrossMedia.Current.PickPhotoAsync();
-			if (file == null)
-			{
-				return;
-			}
-
-			using (MemoryStream stream = new MemoryStream())
-			{
-				file.GetStream().CopyTo(stream);
-				ImageData = stream.ToArray();
-			}
-			OnPropertyChanged(nameof(ItemImage));
-
-			IsImageChanged = true;
-		});
+		}
 
 		public void UpdateUser()
 		{
@@ -111,6 +66,6 @@ namespace MicroBee.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		
+
 	}
 }

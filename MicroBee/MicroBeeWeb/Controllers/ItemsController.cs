@@ -132,7 +132,7 @@ namespace MicroBee.Web.Controllers
 		// PUT api/items/worker/itemId
 		[HttpPost("worker")]
 		[Authorize]
-		public async Task<IActionResult> Worker(int itemId)
+		public async Task<IActionResult> Worker([FromBody]int itemId)
 		{
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)

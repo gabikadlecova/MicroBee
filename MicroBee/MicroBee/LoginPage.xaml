@@ -2,17 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MicroBee.LoginPage">
-    <ContentPage.Content>
-        <StackLayout>
+	<ContentPage.Content>
+		<StackLayout>
 			<StackLayout>
 				<Label Text="Login"/>
 				<Entry Text="{Binding LoginData.Username}"/>
 			</StackLayout>
-	        <StackLayout>
+			<StackLayout>
 				<Label Text="Password" />
 				<Entry IsPassword="True"  Text="{Binding LoginData.Password}"/>
 			</StackLayout>
 			<Button Clicked="LoginSubmitButton_OnClicked"/>
-        </StackLayout>
-    </ContentPage.Content>
+			<Label x:Name="errorLabel" Text="Login failed, please try again" TextColor="Crimson" IsVisible="False" />
+			<Button Text="Register" BackgroundColor="Transparent" BorderColor="Transparent" Clicked="RegisterButton_OnClicked" />
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

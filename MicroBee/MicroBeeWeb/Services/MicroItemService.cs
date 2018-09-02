@@ -26,24 +26,24 @@ namespace MicroBee.Web.Services
 
 		public IEnumerable<MicroItem> GetAllItems(int pageNumber, int pageSize)
 		{
-			return _repository.GetAll().Skip(pageNumber * pageSize).Take(pageSize);
+			return _repository.GetAll().OrderByDescending(m => m.Id).Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
 		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize)
 		{
-			return OpenItems().Skip(pageNumber * pageSize).Take(pageSize);
+			return OpenItems().OrderByDescending(m => m.Id).Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
 		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category)
 		{
 			var items = _repository.GetAll().Where(item => item.Category.Name == category);
-			return items.Skip(pageNumber * pageSize).Take(pageSize);
+			return items.OrderByDescending(m => m.Id).Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
 		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category, string titleFilter)
 		{
 			var items = _repository.GetAll().Where(item => item.Category.Name == category && item.Title.Contains(titleFilter));
-			return items.Skip(pageNumber * pageSize).Take(pageSize);
+			return items.OrderByDescending(m => m.Id).Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
 		public async Task<MicroItem> InsertItemAsync(MicroItem item)

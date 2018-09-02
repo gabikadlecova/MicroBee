@@ -2,11 +2,22 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MicroBee.RegisterPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+	<ContentPage.Content>
+		<StackLayout>
+			<StackLayout>
+				<Label Text="Username"/>
+				<Entry Text="{Binding RegisterData.Username}"/>
+			</StackLayout>
+			<StackLayout>
+				<Label Text="Password" />
+				<Entry IsPassword="True"  Text="{Binding RegisterData.Password}"/>
+			</StackLayout>
+			<StackLayout>
+				<Label Text="E-mail" />
+				<Entry Text="{Binding RegisterData.Email}"/>
+			</StackLayout>
+			<Button Clicked="RegisterSubmitButton_OnClicked"/>
+			<Label x:Name="errorLabel" Text="Register failed, please try again" TextColor="Crimson" IsVisible="False"/>
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

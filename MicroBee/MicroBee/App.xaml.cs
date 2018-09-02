@@ -19,7 +19,7 @@ namespace MicroBee
 		{
 			InitializeComponent();
 
-			MainPage = new NavigationPage(new MainPage());
+			MainPage = new ItemMasterDetailPage();
 		}
 
 		protected override void OnStart ()

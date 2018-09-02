@@ -11,7 +11,7 @@
 	<ContentPage.Content>
 		<StackLayout>
 			<!-- Detail StackLayout (IsEditing == false) -->
-			<StackLayout IsVisible="{Binding IsDetail}">
+			<StackLayout x:Name="detailLayout" IsVisible="True" >
 				<StackLayout Orientation="Horizontal">
 					<StackLayout>
 						<Label Text="{Binding Item.Title}" LineBreakMode="WordWrap"/>
@@ -21,29 +21,25 @@
 					<Image Source="{Binding ItemImage}" />
 				</StackLayout>
 
-				<Label BindingContext="{x:Reference Name=Button1}" Text="{Binding IsVisible}" />
-				<Label BindingContext="{x:Reference Name=Button1}" Text="{Binding IsEnabled}" />
-				<Label BindingContext="{x:Reference Name=Button2}" Text="{Binding IsVisible}" />
-				<Label BindingContext="{x:Reference Name=Button2}" Text="{Binding IsEnabled}" />
-				<Button x:Name="Button1" IsVisible="{Binding IsUserOwner}" Command="{Binding EditCommand}"/>
-				<Button x:Name="Button2" IsVisible="{Binding CanAccept}" Command="{Binding AcceptJobCommand}" />
+				<Label Text="{Binding Item.Description}" />
+				<Button x:Name="EditButton" Text="Edit" IsVisible="{Binding IsUserOwner}" Clicked="EditButton_OnClicked"/>
+				<Button x:Name="AcceptJobButton" Text="Accept job" IsEnabled="{Binding CanAccept}" Clicked="AcceptJobButton_OnClicked"/>
 			</StackLayout>
 
 			<!-- Edit StackLayout (IsEditing == true) -->
-			<StackLayout IsVisible="{Binding IsEditing}">
+			<StackLayout x:Name="editLayout" IsVisible="False" >
 				<StackLayout Orientation="Horizontal">
 					<StackLayout>
 						<Entry Text="{Binding Item.Title}" />
 						<Label Text="{Binding Item.OwnerName}" />
 						<Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
-						<!--TODO another property with logic-->
 					</StackLayout>
 					<Image Source="{Binding ItemImage}" />
-					<Button IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Command="{Binding ChooseImageCommand}"/>
+					<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
 				</StackLayout>
 
 				<Entry Text="{Binding Item.Description}" />
-				<Button IsVisible="{Binding IsUserOwner}" Command="{Binding SubmitEditCommand}" />
+				<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
 			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>

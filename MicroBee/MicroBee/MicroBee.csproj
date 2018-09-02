@@ -23,10 +23,13 @@
     <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
     <None Remove="ItemDetail.xaml.cs~RFea27aa.TMP" />
     <None Remove="ItemDetail.xaml~RFe85664.TMP" />
+    <None Remove="ItemMasterDetailPage.xaml~RF43c1bfb.TMP" />
+    <None Remove="LoginPage.xaml~RF36cfaa7.TMP" />
     <None Remove="LoginPage.xaml~RF99a272b.TMP" />
     <None Remove="LoginPage.xaml~RF9dd63a2.TMP" />
     <None Remove="MainPage.xaml.cs~RF36ab923.TMP" />
     <None Remove="MainPage.xaml.cs~RF378cb5f.TMP" />
+    <None Remove="UserItemsPage.xaml~RF451cb02.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,12 +47,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AcceptedItemsPage.xaml.cs">
+      <DependentUpon>AcceptedItemsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="ItemCarouselPage.xaml.cs">
       <DependentUpon>ItemCarouselPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ItemMasterDetailPageMenuItem.cs">
+      <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AcceptedItemsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="AddItemPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -59,6 +71,12 @@
     <EmbeddedResource Update="ItemDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="ItemMasterDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ItemMasterDetailPageMaster.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -66,6 +84,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="RegisterPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UserItemsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

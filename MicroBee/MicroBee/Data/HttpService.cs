@@ -79,24 +79,6 @@ namespace MicroBee.Data
 			return await content.ReadAsByteArrayAsync();
 		}
 
-		//public async Task PostAsync(string path, byte[] item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
-		//{
-		//	if (authorize)
-		//	{
-		//		await CheckTokenLifetimeAsync();
-		//	}
-
-		//	Uri uri = new Uri(CreateUri(path, parameters), UriKind.Relative);
-
-		//	HttpContent content = new ByteArrayContent(item);
-		//	content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-		//	var response = await _client.PostAsync(uri, content);
-
-		//	if (!response.IsSuccessStatusCode)
-		//	{
-		//		throw new InvalidResponseException(response.StatusCode + ": " + response.ReasonPhrase);
-		//	}
-		//}
 
 		public async Task PostAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{

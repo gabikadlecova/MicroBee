@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:scroll="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              x:Class="MicroBee.MainPage">
 	<ContentPage.BindingContext>
 		<viewModels:ItemsViewModel x:Name="Model"/>
@@ -10,18 +11,28 @@
 
 	<StackLayout>
 		<Label>Micro jobs</Label>
-		<Label Text="{Binding SelectedCategory}"/>
-
-		<ListView x:Name="itemListView" ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True" >
+		
+		<ListView x:Name="itemListView" ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}">
 			<ListView.Behaviors>
 				<scroll:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
 			</ListView.Behaviors>
 
 			<ListView.Header>
+				<StackLayout Orientation="Horizontal">
 				<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
 						SelectedItem="{Binding SelectedCategory}" />
+
+					<Button Command="{Binding RefreshCommand}">
+						<Button.IsVisible>
+							<OnPlatform x:TypeArguments="system:Boolean">
+								<On Platform="UWP" Value="True"/>
+								<On Platform="iOS, Android" Value="False"/>
+							</OnPlatform>
+						</Button.IsVisible>
+					</Button>
+				</StackLayout>
 			</ListView.Header>
-			
+
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
