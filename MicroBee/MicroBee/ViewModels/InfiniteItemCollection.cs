@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -75,18 +77,15 @@ namespace MicroBee.ViewModels
 
 			foreach (var item in nextItems)
 			{
-				ImageSource imageData = null;
+				byte[] imageData = null;
 				if (item.ImageId != null)
 				{
-					var imageBytes = await _service.GetImageAsync(item.ImageId.Value);
-					
-					imageData = ImageSource.FromStream(() => new MemoryStream(imageBytes));
-					
+					imageData = await _service.GetImageAsync(item.ImageId.Value);
 				}
 
-				Add(new InfiniteItemElement() { Item = item, ItemImage = imageData });
+				Add(new InfiniteItemElement() { Item = item, ImageData = imageData });
 			}
-
+			
 			_currentPage++;
 			if (nextItems.Count < PageSize)
 			{
@@ -100,10 +99,16 @@ namespace MicroBee.ViewModels
 		public bool CanLoadMore { get; private set; }
 		public bool IsLoadingMore { get; private set; }
 		public event EventHandler<LoadingMoreEventArgs> LoadingMore;
+
+		
 	}
 	class InfiniteItemElement
 	{
 		public MicroItem Item { get; set; }
-		public ImageSource ItemImage { get; set; }
+		public byte[] ImageData { get; set; }
+		public ImageSource ItemImage => ImageData == null ? null : ImageSource.FromStream(() =>  new MemoryStream(ImageData));
+
+		
+
 	}
 }

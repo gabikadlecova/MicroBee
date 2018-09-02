@@ -20,25 +20,26 @@ namespace MicroBee
 			InitializeComponent();
 			itemListView.ItemSelected += async (object sender, SelectedItemChangedEventArgs e) =>
 			{
-				ItemDetailPage detailPage = new ItemDetailPage()
+				ItemCarouselPage carouselPage = new ItemCarouselPage()
 				{
 					Pages = new ObservableCollection<DetailViewModel>(Model.Items.Select(it => new DetailViewModel()
 					{
-						ItemImage = it.ItemImage,
+						ImageData = it.ImageData,
 						Categories = Model.Categories,
 						Item = it.Item
 					}))
 				};
 				var selectedItem = (InfiniteItemElement)((ListView) sender).SelectedItem;
-				detailPage.Selected =
-					detailPage.Pages.FirstOrDefault(m => m.Item.Id == selectedItem.Item.Id);
+				carouselPage.Selected =
+					carouselPage.Pages.FirstOrDefault(m => m.Item.Id == selectedItem.Item.Id);
 
-				await Navigation.PushAsync(detailPage);
+				await Navigation.PushAsync(carouselPage);
 			};
 		}
 
 		protected override async void OnAppearing()
 		{
+			Model.Items.Reset();
 			await Model.Items.LoadMoreAsync();
 			Model.Categories = await App.ItemService.GetCategoriesAsync();
 		}

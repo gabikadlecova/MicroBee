@@ -198,7 +198,7 @@ namespace MicroBee.Web.Controllers
 				return NotFound();
 			}
 
-			return Ok(image.Data);
+			return File(image.Data, "image/png");
 		}
 
 		[HttpPost("image/{itemId}")]

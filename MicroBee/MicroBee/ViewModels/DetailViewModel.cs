@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Input;
-using MicroBee.Data;
 using MicroBee.Data.Models;
 using Plugin.Media;
-using Plugin.Media.Abstractions;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace MicroBee.ViewModels
 {
@@ -19,7 +14,7 @@ namespace MicroBee.ViewModels
 		private bool isEditing;
 
 		public MicroItem Item { get; set; }
-		public ImageSource ItemImage { get; set; }
+		public ImageSource ItemImage => ImageData == null? null : ImageSource.FromStream(() => new MemoryStream(ImageData));
 		private IList<ItemCategory> _categories;
 		public IList<ItemCategory> Categories
 		{
@@ -52,13 +47,13 @@ namespace MicroBee.ViewModels
 		}
 
 		public bool IsImageChanged { get; private set; }
-		private byte[] _imageData;
-		public ICommand EditCommand => new Command(execute: () => { IsEditing = true; }, canExecute: () => IsUserOwner);
+		public byte[] ImageData { get; set; }
+		public ICommand EditCommand => new Command(execute: () => { IsEditing = true; });
 		public ICommand SubmitEditCommand => new Command(execute: async () =>
 		{
 			if (IsImageChanged)
 			{
-				await App.ItemService.UpdateMicroItemAsync(Item, _imageData);
+				await App.ItemService.UpdateMicroItemAsync(Item, ImageData);
 			}
 			else
 			{
@@ -69,8 +64,7 @@ namespace MicroBee.ViewModels
 
 			if (Item.ImageId != null)
 			{
-				byte[] imageData = await App.ItemService.GetImageAsync(Item.ImageId.Value);
-				ItemImage = ImageSource.FromStream(() => new MemoryStream(imageData));
+				ImageData = await App.ItemService.GetImageAsync(Item.ImageId.Value);
 				OnPropertyChanged(nameof(ItemImage));
 			}
 
@@ -97,12 +91,8 @@ namespace MicroBee.ViewModels
 			using (MemoryStream stream = new MemoryStream())
 			{
 				file.GetStream().CopyTo(stream);
-				_imageData = stream.ToArray();
+				ImageData = stream.ToArray();
 			}
-
-
-			ItemImage = ImageSource.FromStream(() => file.GetStream());
-
 			OnPropertyChanged(nameof(ItemImage));
 
 			IsImageChanged = true;
@@ -120,5 +110,7 @@ namespace MicroBee.ViewModels
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		
 	}
 }

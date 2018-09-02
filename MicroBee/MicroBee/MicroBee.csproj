@@ -44,13 +44,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ItemDetailPage.xaml.cs">
-      <DependentUpon>ItemDetailPage.xaml</DependentUpon>
+    <Compile Update="ItemCarouselPage.xaml.cs">
+      <DependentUpon>ItemCarouselPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="AddItemPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ItemCarouselPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="ItemDetailPage.xaml">

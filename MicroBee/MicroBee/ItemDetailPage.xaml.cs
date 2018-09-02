@@ -1,49 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using MicroBee.Data.Models;
-using MicroBee.ViewModels;
+
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ItemDetailPage : CarouselPage
+	public partial class ItemDetailPage : ContentPage
 	{
-		public ObservableCollection<DetailViewModel> Pages { get; set; }
-		public DetailViewModel Selected { get; set; }
+		public int ItemId { get; set; }
 		public ItemDetailPage ()
 		{
 			InitializeComponent ();
 		}
 
-		protected override void OnAppearing()
+		protected override async void OnAppearing()
 		{
-			BindingContext = this;
-		}
+			var item = await App.ItemService.GetMicroItemAsync(ItemId);
+			Model.Item = item;
 
-		private void Button_OnClicked(object sender, EventArgs e)
-		{
-			if (!App.IsUserAuthenticated)
+			if (item.ImageId != null)
 			{
-				LoginPage page = new LoginPage();
-				page.LoginEventHandler += UpdateUserHandler;
-				Navigation.PushModalAsync(page);
+				byte[] imageData = await App.ItemService.GetImageAsync(item.ImageId.Value);
+				Model.ImageData = imageData;
 			}
-		}
 
-		private void UpdateUserHandler(object sender, EventArgs e)
-		{
-			Pages.ForEach((DetailViewModel model) =>
-			{
-				model.UpdateUser();
-			});
+			Model.UpdateUser();
 		}
 	}
 }
