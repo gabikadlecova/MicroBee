@@ -15,6 +15,7 @@ namespace MicroBee
 	{
 		public int ItemId { get; set; }
 		private bool _isEditEnabled;
+		private bool _isAcceptEnabled;
 		public bool IsEditEnabled
 		{
 			get => _isEditEnabled;
@@ -22,6 +23,15 @@ namespace MicroBee
 			{
 				_isEditEnabled = value;
 				EditButton.IsVisible = IsEditEnabled;
+			}
+		}
+		public bool IsAcceptEnabled
+		{
+			get => _isAcceptEnabled;
+			set
+			{
+				_isAcceptEnabled = value;
+				AcceptJobButton.IsVisible = IsAcceptEnabled;
 			}
 		}
 
@@ -43,6 +53,7 @@ namespace MicroBee
 		{
 			InitializeComponent();
 			IsEditEnabled = false;
+			IsAcceptEnabled = false;
 		}
 
 		protected override async void OnAppearing()

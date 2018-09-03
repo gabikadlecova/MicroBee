@@ -3,22 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              x:Class="MicroBee.UserItemsPage">
-		<ContentPage.BindingContext>
-						<viewModels:ItemsViewModel x:Name="Model"/>
-		</ContentPage.BindingContext>
+	<ContentPage.BindingContext>
+		<viewModels:ItemsViewModel x:Name="Model"/>
+	</ContentPage.BindingContext>
 	<ContentPage.Content>
-		<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ViewCell>
-						<StackLayout>
-							<Label Text="{Binding Title}" FontAttributes="Bold"/>
-							<Label Text="{Binding Category.Name}" />
-							<Label Text="{Binding WorkerName, StringFormat='Worker: {0}'}" />
-						</StackLayout>
-					</ViewCell>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+		<StackLayout>
+			<Button Text="Add job" Clicked="AddButton_OnClicked"/>
+			<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<StackLayout>
+								<Label Text="{Binding Title}" FontAttributes="Bold"/>
+								<Label Text="{Binding Category.Name}" />
+								<Label Text="{Binding WorkerName, StringFormat='Worker: {0}'}" />
+							</StackLayout>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

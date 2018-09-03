@@ -22,7 +22,7 @@
 				<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
 						SelectedItem="{Binding SelectedCategory}" />
 
-					<Button Command="{Binding RefreshCommand}">
+					<Button Text="Refresh" Command="{Binding RefreshCommand}">
 						<Button.IsVisible>
 							<OnPlatform x:TypeArguments="system:Boolean">
 								<On Platform="UWP" Value="True"/>

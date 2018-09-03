@@ -46,5 +46,16 @@ namespace MicroBee
 			page.CurrentPage = page.Children.FirstOrDefault(p => ((ItemDetailPage)p).ItemId == selectedItem.Id);
 			Navigation.PushAsync(page);
 		}
+
+		private void AddButton_OnClicked(object sender, EventArgs e)
+		{
+			var addPage = new AddItemPage();
+			addPage.AddSucceeded += async (sendA, eA) =>
+			{
+				await Navigation.PopAsync();
+			};
+
+			Navigation.PushAsync(addPage);
+		}
 	}
 }

@@ -23,7 +23,8 @@ namespace MicroBee
 				{
 					carouselPage.Children.Add(new ItemDetailPage()
 					{
-						ItemId = element.Item.Id
+						ItemId = element.Item.Id,
+						IsAcceptEnabled = true
 					});
 				}
 
@@ -34,16 +35,16 @@ namespace MicroBee
 
 				itemListView.SelectedItem = null;
 			};
-			
+
 			Initialize();
 		}
-		
+
 		private async void Initialize()
 		{
 			Model.Categories = await App.ItemService.GetCategoriesAsync();
 
 			await Model.Items.LoadMoreAsync();
 		}
-		
+
 	}
 }

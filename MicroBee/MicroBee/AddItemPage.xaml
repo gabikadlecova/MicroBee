@@ -12,15 +12,15 @@
 		    <StackLayout Orientation="Horizontal">
 			    <StackLayout>
 				    <Entry Text="{Binding Item.Title}" />
-				    <Label Text="{Binding Item.OwnerName}" />
 				    <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
 			    </StackLayout>
-			    <Image Source="{Binding ItemImage}" />
+			    <Image Source="{Binding ImageSource}" />
 			    <Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
 		    </StackLayout>
 
 		    <Entry Text="{Binding Item.Description}" />
-		    <Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitButton_OnClicked" />
+		    <Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
+		    <Button Text="Submit" Clicked="SubmitButton_OnClicked" />
 	    </StackLayout>
     </ContentPage.Content>
 </ContentPage>

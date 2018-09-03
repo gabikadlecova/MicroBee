@@ -9,7 +9,8 @@
 		public ItemStatus Status { get; set; }
 		public int? ImageId { get; set; }
 
-	    public string OwnerName { get; set; }
+	    public decimal Price { get; set; }
+		public string OwnerName { get; set; }
 	    public string WorkerName { get; set; }
 	}
 

@@ -17,6 +17,7 @@
 						<Label Text="{Binding Item.Title}" LineBreakMode="WordWrap"/>
 						<Label Text="{Binding Item.OwnerName}" />
 						<Label Text="{Binding Item.Category.Name}" FontAttributes="Italic" />
+						<Label Text="{Binding Item.Price, StringFormat='{0:C}'}" />
 					</StackLayout>
 					<Image Source="{Binding ItemImage}" />
 				</StackLayout>
@@ -39,6 +40,7 @@
 				</StackLayout>
 
 				<Entry Text="{Binding Item.Description}" />
+				<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
 				<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
 			</StackLayout>
 		</StackLayout>

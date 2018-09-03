@@ -158,6 +158,13 @@ namespace MicroBee.Web.Controllers
 				return BadRequest();
 			}
 
+			item.Status = ItemStatus.Accepted;
+			var updatedItem = await _itemService.UpdateItemAsync(item);
+			if (updatedItem == null)
+			{
+				return BadRequest();
+			}
+
 			return Ok();
 		}
 

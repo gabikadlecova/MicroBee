@@ -39,6 +39,10 @@ namespace MicroBee.Web.DAL.Repositories
 
 		public async Task<MicroItem> AddAsync(MicroItem item)
 		{
+
+			var category = await _context.Categories.FindAsync(item.Category.Id);
+			item.Category = category;
+
 			var added = await _context.AddAsync(item);
 			await _context.SaveChangesAsync();
 			return added.Entity;
