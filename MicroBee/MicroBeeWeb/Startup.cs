@@ -32,6 +32,7 @@ namespace MicroBee.Web
 		{
 			Configuration = configuration;
 		}
+	
 
 		public IConfiguration Configuration { get; }
 
