@@ -42,11 +42,19 @@ namespace MicroBee.Web
 			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<MicroBeeDbContext>()
 				.AddDefaultTokenProviders();
-			
 
 			// Db context
-			string connection = Configuration.GetConnectionString("MicroBeeDatabase");
-			services.AddDbContext<MicroBeeDbContext>(options => options.UseSqlServer(connection));
+			if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+			{
+				services.AddDbContext<MicroBeeDbContext>(options =>
+					options.UseSqlServer(Configuration.GetConnectionString("AzDbConnection")));
+			}
+			else
+			{
+				string connection = Configuration.GetConnectionString("MicroBeeDatabase");
+				services.AddDbContext<MicroBeeDbContext>(options => options.UseSqlServer(connection));
+			}
+			services.BuildServiceProvider().GetService<MicroBeeDbContext>().Database.Migrate();
 
 			// Repositories
 			services.AddTransient<IMicroItemRepository, MicroItemRepository>();
@@ -113,8 +121,6 @@ namespace MicroBee.Web
 
 			//app.UseHttpsRedirection();
 			app.UseMvc();
-
-			context.Database.Migrate();
 		}
 	}
 }
