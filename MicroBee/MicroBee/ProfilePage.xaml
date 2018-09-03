@@ -1,12 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              x:Class="MicroBee.ProfilePage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+	<ContentPage.BindingContext>
+		<viewModels:UserProfileViewModel x:Name="Model"/>
+	</ContentPage.BindingContext>
+	<ContentPage.Content>
+		<StackLayout>
+			<Label Text="{Binding Profile.Username, StringFormat='User profile: {0}'}"></Label>
+			<Label Text="{Binding Profile.Email, StringFormat='Email: {0}'}"></Label>
+			<Label Text="{Binding Profile.CreatedItems.Count, StringFormat='Created jobs: {0}'}"></Label>
+			<Label Text="{Binding Profile.AcceptedItems.Count, StringFormat='Accepted jobs: {0}'}"></Label>
+			<Button Text="Logout" Clicked="LogoutButton_OnClicked"/>
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

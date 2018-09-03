@@ -15,11 +15,12 @@ namespace MicroBee
 
 		public static string UserName => HttpService.Username;
 		public static bool IsUserAuthenticated => HttpService.Authenticated;
+
 		public App ()
 		{
 			InitializeComponent();
 
-			MainPage = new ItemMasterDetailPage();
+			MainPage = new NavigationPage(new MainPage());
 		}
 
 		protected override void OnStart ()
@@ -35,6 +36,7 @@ namespace MicroBee
 		protected override void OnResume ()
 		{
 			// Handle when your app resumes
-		}	
+		}
+		
 	}
 }

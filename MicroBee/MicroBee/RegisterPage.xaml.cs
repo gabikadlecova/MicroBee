@@ -12,9 +12,7 @@ namespace MicroBee
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class RegisterPage : ContentPage
 	{
-		public delegate void RegisterCompleted();
-
-		public event RegisterCompleted RegisterHandler;
+		public event EventHandler RegisterSucceeded;
 		public RegisterModel RegisterData { get; }
 		public RegisterPage()
 		{
@@ -28,8 +26,7 @@ namespace MicroBee
 			bool succeeded = await App.AccountService.RegisterAsync(RegisterData);
 			if (succeeded)
 			{
-				await Navigation.PopModalAsync();
-				RegisterHandler?.Invoke();
+				RegisterSucceeded?.Invoke(this, EventArgs.Empty);
 			}
 			else
 			{

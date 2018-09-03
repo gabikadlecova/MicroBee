@@ -54,7 +54,7 @@ namespace MicroBee
 		{
 			if (!App.IsUserAuthenticated)
 			{
-				await Navigation.PushModalAsync(new LoginPage());
+				throw new InvalidOperationException("User must be logged in to accept the job");
 			}
 			else
 			{

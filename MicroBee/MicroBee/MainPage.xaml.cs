@@ -1,49 +1,44 @@
-﻿using System.Linq;
-using MicroBee.ViewModels;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MainPage : ContentPage
 	{
-		public MainPage()
+		public MainPage ()
 		{
-			InitializeComponent();
+			InitializeComponent ();
+		}
 
-			itemListView.ItemSelected += async (object sender, SelectedItemChangedEventArgs e) =>
+		private void LoginButton_OnClicked(object sender, EventArgs e)
+		{
+			var loginPage = new LoginPage();
+			loginPage.LoginSucceeded += async (senderL, eL) =>
 			{
-				var selectedItem = (InfiniteItemElement)((ListView)sender).SelectedItem;
-				if (selectedItem == null)
-				{
-					return;
-				}
-
-				ItemCarouselPage carouselPage = new ItemCarouselPage();
-				foreach (var element in Model.Items)
-				{
-					carouselPage.Children.Add(new ItemDetailPage()
-					{
-						ItemId = element.Item.Id
-					});
-				}
-
-				carouselPage.CurrentPage =
-					carouselPage.Children.FirstOrDefault(p => ((ItemDetailPage)p).ItemId == selectedItem.Item.Id);
-
-				await Navigation.PushAsync(carouselPage);
-
-				itemListView.SelectedItem = null;
+				await Navigation.PopAsync();
+				App.Current.MainPage = new ItemMasterDetailPage();
 			};
-			
-			Initialize();
-		}
-		
-		private async void Initialize()
-		{
-			Model.Categories = await App.ItemService.GetCategoriesAsync();
 
-			await Model.Items.LoadMoreAsync();
+			Navigation.PushAsync(loginPage);
 		}
-		
+
+		private void RegisterButton_OnClicked(object sender, EventArgs e)
+		{
+			var registerPage = new RegisterPage();
+			registerPage.RegisterSucceeded += async (senderR, eR) =>
+			{
+				await Navigation.PopAsync();
+				App.Current.MainPage = new ItemMasterDetailPage();
+			};
+
+			Navigation.PushAsync(registerPage);
+		}
 	}
 }

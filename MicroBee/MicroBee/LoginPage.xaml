@@ -12,9 +12,8 @@
 				<Label Text="Password" />
 				<Entry IsPassword="True"  Text="{Binding LoginData.Password}"/>
 			</StackLayout>
-			<Button Clicked="LoginSubmitButton_OnClicked"/>
+			<Button Text="Login" Clicked="LoginSubmitButton_OnClicked"/>
 			<Label x:Name="errorLabel" Text="Login failed, please try again" TextColor="Crimson" IsVisible="False" />
-			<Button Text="Register" BackgroundColor="Transparent" BorderColor="Transparent" Clicked="RegisterButton_OnClicked" />
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

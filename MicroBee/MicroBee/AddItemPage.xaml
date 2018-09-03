@@ -1,12 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
+             xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              x:Class="MicroBee.AddItemPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+  <ContentPage.BindingContext>
+			<viewModels:AddItemViewModel x:Name="Model"/>
+  </ContentPage.BindingContext>  
+	<ContentPage.Content>
+	    <StackLayout>
+		    <StackLayout Orientation="Horizontal">
+			    <StackLayout>
+				    <Entry Text="{Binding Item.Title}" />
+				    <Label Text="{Binding Item.OwnerName}" />
+				    <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
+			    </StackLayout>
+			    <Image Source="{Binding ItemImage}" />
+			    <Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
+		    </StackLayout>
+
+		    <Entry Text="{Binding Item.Description}" />
+		    <Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitButton_OnClicked" />
+	    </StackLayout>
     </ContentPage.Content>
 </ContentPage>

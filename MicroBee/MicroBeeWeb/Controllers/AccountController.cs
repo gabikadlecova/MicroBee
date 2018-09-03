@@ -103,13 +103,15 @@ namespace MicroBee.Web.Controllers
 			{
 				return Unauthorized();
 			}
-			
+
 			var user = await _userManager.Users
 				.Where(u => u.Id == id)
 				.Include(u => u.AcceptedItems)
+					.ThenInclude(i => i.Category)
 				.Include(u => u.CreatedItems)
+					.ThenInclude(i => i.Category)
 				.FirstOrDefaultAsync();
-			
+
 			UserProfileModel model = new UserProfileModel()
 			{
 				Username = user.UserName,
@@ -146,7 +148,7 @@ namespace MicroBee.Web.Controllers
 			{
 				return BadRequest();
 			}
-			
+
 			return await Profile();
 		}
 

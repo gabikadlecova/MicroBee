@@ -16,7 +16,7 @@
 				<Label Text="E-mail" />
 				<Entry Text="{Binding RegisterData.Email}"/>
 			</StackLayout>
-			<Button Clicked="RegisterSubmitButton_OnClicked"/>
+			<Button Text="Register" Clicked="RegisterSubmitButton_OnClicked"/>
 			<Label x:Name="errorLabel" Text="Register failed, please try again" TextColor="Crimson" IsVisible="False"/>
 		</StackLayout>
 	</ContentPage.Content>

@@ -27,6 +27,11 @@ namespace MicroBee.Data
 		    }
 	    }
 
+	    public void Logout()
+	    {
+		    Service.Logout();
+	    }
+
 	    public async Task<bool> RegisterAsync(RegisterModel model)
 	    {
 			try

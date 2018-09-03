@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -10,27 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\IAccountService.cs~RF954c08.TMP" />
-    <None Remove="Data\Models\LoginModel.cs~RF19c89709.TMP" />
-    <None Remove="Data\Models\MicroItem.cs~RF19dbbf55.TMP" />
-    <None Remove="Data\Models\MicroItem.cs~RF4eeaadb.TMP" />
-    <None Remove="Data\Models\RegisterModel.cs~RF19c939d1.TMP" />
-    <None Remove="Data\Models\UserProfile.cs~RF202fdd26.TMP" />
-    <None Remove="Data\InvalidResponseException.cs~RF3bc2ba9.TMP" />
-    <None Remove="Data\NotAuthenticatedException.cs~RF1641bb62.TMP" />
-    <None Remove="IMicroItemManager.cs~RF1a8647a5.TMP" />
-    <None Remove="IMicroItemManager.cs~RFe830bc.TMP" />
-    <None Remove="IMicroItemManager.cs~RFfcae86f.TMP" />
-    <None Remove="ItemDetail.xaml.cs~RFea27aa.TMP" />
-    <None Remove="ItemDetail.xaml~RFe85664.TMP" />
-    <None Remove="ItemMasterDetailPage.xaml~RF43c1bfb.TMP" />
-    <None Remove="LoginPage.xaml~RF36cfaa7.TMP" />
-    <None Remove="LoginPage.xaml~RF99a272b.TMP" />
-    <None Remove="LoginPage.xaml~RF9dd63a2.TMP" />
-    <None Remove="MainPage.xaml.cs~RF36ab923.TMP" />
-    <None Remove="MainPage.xaml.cs~RF378cb5f.TMP" />
-    <None Remove="UserItemsPage.xaml~RF451cb02.TMP" />
+    <None Remove="Data\IAccountService.cs~RF40dc010.TMP" />
+    <None Remove="ItemMasterDetailPageMaster.xaml~RF3edae1.TMP" />
+    <None Remove="MainPage.xaml~RF3a6c92d.TMP" />
+    <None Remove="UserItemsPage.xaml.cs~RF3d811a1.TMP" />
   </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -44,6 +29,9 @@
     <Reference Include="Xamarin.Android.Arch.Lifecycle.Common">
       <HintPath>C:\Users\Gabi\.nuget\packages\xamarin.android.arch.lifecycle.common\1.0.3.1\lib\MonoAndroid80\Xamarin.Android.Arch.Lifecycle.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Forms.Core">
+      <HintPath>C:\Users\Gabi\.nuget\packages\xamarin.forms\3.1.0.697729\lib\MonoAndroid10\Xamarin.Forms.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +43,9 @@
     </Compile>
     <Compile Update="ItemMasterDetailPageMenuItem.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ItemsPage.xaml.cs">
+      <DependentUpon>ItemsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -78,6 +69,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="MainPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="ProfilePage.xaml">

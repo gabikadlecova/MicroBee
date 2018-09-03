@@ -9,6 +9,7 @@ namespace MicroBee.Data
     public interface IAccountService
     {
 	    Task<bool> LoginAsync(LoginModel model);
+	    void Logout();
 	    Task<bool> RegisterAsync(RegisterModel model);
 	    Task<UserProfile> GetUserProfileAsync();
 	    Task UpdateUserProfileAsync(UserProfile profile);

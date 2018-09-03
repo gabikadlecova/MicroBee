@@ -15,7 +15,7 @@ namespace MicroBee
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ItemMasterDetailPageMaster : ContentPage
 	{
-		public ListView ListView;
+		public ListView ListView => this.listView;
 		public ItemMasterDetailPageMaster()
 		{
 			InitializeComponent();
@@ -31,7 +31,7 @@ namespace MicroBee
 			{
 				MenuItems = new ObservableCollection<ItemMasterDetailPageMenuItem>()
 				{
-					new ItemMasterDetailPageMenuItem { Title = "Job list", TargetType = typeof(MainPage)},
+					new ItemMasterDetailPageMenuItem { Title = "Job list", TargetType = typeof(ItemsPage)},
 					new ItemMasterDetailPageMenuItem { Title = "Created jobs", TargetType = typeof(UserItemsPage)},
 					new ItemMasterDetailPageMenuItem { Title = "Accepted jobs", TargetType = typeof(AcceptedItemsPage)},
 					new ItemMasterDetailPageMenuItem { Title = "User profile", TargetType = typeof(ProfilePage)}

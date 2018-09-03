@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -8,24 +7,21 @@ using MicroBee.Data.Models;
 
 namespace MicroBee.ViewModels
 {
-    class ItemsViewModel : INotifyPropertyChanged
+    class UserProfileViewModel : INotifyPropertyChanged
     {
-	    private ObservableCollection<MicroItem> _userItems;
+	    private UserProfile _profile;
 
-	    public ObservableCollection<MicroItem> UserItems
+	    public UserProfile Profile
 	    {
-		    get => _userItems;
+		    get => _profile;
 		    set
 		    {
-			    _userItems = value;
+			    _profile = value;
 				OnPropertyChanged();
 		    }
 	    }
 
-	    public ItemsViewModel()
-	    {
-			UserItems = new ObservableCollection<MicroItem>();
-	    }
+
 	    public event PropertyChangedEventHandler PropertyChanged;
 
 	    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
