@@ -9,7 +9,7 @@ namespace MicroBee
 	public partial class App : Application
 	{
 		private static readonly HttpService HttpService =
-			new HttpService("http://localhost:56632/", "api/account/login/", "api/account/register/");
+			new HttpService("http://microbee-jobs.azurewebsites.net/", "api/account/login/", "api/account/register/");
 		public static readonly IMicroItemService ItemService = new MicroItemService(HttpService);
 		public static readonly IAccountService AccountService= new AccountService(HttpService);
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MicroBee.Web.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +27,7 @@ namespace MicroBee.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(maxLength: 256, nullable: false),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
@@ -40,11 +40,13 @@ namespace MicroBee.Web.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Valid = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.UniqueConstraint("AK_AspNetUsers_UserName", x => x.UserName);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,6 +60,19 @@ namespace MicroBee.Web.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Data = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,9 +189,12 @@ namespace MicroBee.Web.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(type: "Money", nullable: false),
                     CategoryId = table.Column<int>(nullable: true),
                     Status = table.Column<int>(nullable: false),
-                    Image = table.Column<byte[]>(nullable: true)
+                    ImageId = table.Column<int>(nullable: true),
+                    OwnerName = table.Column<string>(nullable: false),
+                    WorkerName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -186,6 +204,18 @@ namespace MicroBee.Web.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MicroItems_AspNetUsers_OwnerName",
+                        column: x => x.OwnerName,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "UserName",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MicroItems_AspNetUsers_WorkerName",
+                        column: x => x.WorkerName,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "UserName",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -232,6 +262,16 @@ namespace MicroBee.Web.Migrations
                 name: "IX_MicroItems_CategoryId",
                 table: "MicroItems",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MicroItems_OwnerName",
+                table: "MicroItems",
+                column: "OwnerName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MicroItems_WorkerName",
+                table: "MicroItems",
+                column: "WorkerName");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -252,16 +292,19 @@ namespace MicroBee.Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Images");
+
+            migrationBuilder.DropTable(
                 name: "MicroItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "AspNetUsers");
         }
     }
 }

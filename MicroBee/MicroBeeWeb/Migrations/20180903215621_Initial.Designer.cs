@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MicroBee.Web.Migrations
 {
     [DbContext(typeof(MicroBeeDbContext))]
-    [Migration("20180821182313_SetCurrency")]
-    partial class SetCurrency
+    [Migration("20180903215621_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -57,6 +57,7 @@ namespace MicroBee.Web.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<bool>("Valid");
@@ -110,9 +111,9 @@ namespace MicroBee.Web.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageAddress");
+                    b.Property<int?>("ImageId");
 
-                    b.Property<string>("OwnerId")
+                    b.Property<string>("OwnerName")
                         .IsRequired();
 
                     b.Property<decimal>("Price")
@@ -122,15 +123,15 @@ namespace MicroBee.Web.Migrations
 
                     b.Property<string>("Title");
 
-                    b.Property<string>("WorkerId");
+                    b.Property<string>("WorkerName");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerName");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex("WorkerName");
 
                     b.ToTable("MicroItems");
                 });
@@ -253,12 +254,14 @@ namespace MicroBee.Web.Migrations
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("CreatedItems")
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("OwnerName")
+                        .HasPrincipalKey("UserName")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MicroBee.Web.DAL.Entities.ApplicationUser")
                         .WithMany("AcceptedItems")
-                        .HasForeignKey("WorkerId");
+                        .HasForeignKey("WorkerName")
+                        .HasPrincipalKey("UserName");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

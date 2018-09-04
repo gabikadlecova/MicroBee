@@ -1,29 +1,29 @@
-//{
-//  "iisSettings": {
-//    "windowsAuthentication": false,
-//    "anonymousAuthentication": true,
-//    "iisExpress": {
-//      "applicationUrl": "http://localhost:56632/",
-//      "sslPort": 0
-//    }
-//  },
-//  "profiles": {
-//    "IIS Express": {
-//      "commandName": "IISExpress",
-//      "launchBrowser": true,
-//      "launchUrl": "api/items?pageNumber=0&pageSize=10",
-//      "environmentVariables": {
-//        "ASPNETCORE_ENVIRONMENT": "Development"
-//      }
-//    },
-//			"MicroBeeWeb": {
-//				"commandName": "Project",
-//				"launchBrowser": true,
-//				"launchUrl": "api/items?pageNumber=0&pageSize=10",
-//				"environmentVariables": {
-//					"ASPNETCORE_ENVIRONMENT": "Development"
-//				},
-//				"applicationUrl": "http://localhost:56633/"
-//			}
-//  }
-//}
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:56632/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/items?pageNumber=0&pageSize=10",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+			"MicroBeeWeb": {
+				"commandName": "Project",
+				"launchBrowser": true,
+				"launchUrl": "api/items?pageNumber=0&pageSize=10",
+				"environmentVariables": {
+					"ASPNETCORE_ENVIRONMENT": "Development"
+				},
+				"applicationUrl": "http://localhost:56633/"
+			}
+  }
+}
