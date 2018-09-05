@@ -15,9 +15,10 @@ namespace MicroBee
 		public MainPage ()
 		{
 			InitializeComponent ();
+			TryLogin();
 		}
 
-		protected override async void OnAppearing()
+		private async void TryLogin()
 		{
 			if (await App.AccountService.TryLoginAsync())
 			{

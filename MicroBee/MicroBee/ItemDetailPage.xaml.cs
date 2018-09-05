@@ -13,7 +13,17 @@ namespace MicroBee
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ItemDetailPage : ContentPage
 	{
-		public int ItemId { get; set; }
+		private int _itemId;
+		public int ItemId
+		{
+			get => _itemId;
+			set
+			{
+				_itemId = value;
+				Initialize();
+			}
+		}
+
 		private bool _isEditEnabled;
 		private bool _isAcceptEnabled;
 		public bool IsEditEnabled
@@ -54,6 +64,11 @@ namespace MicroBee
 			InitializeComponent();
 			IsEditEnabled = false;
 			IsAcceptEnabled = false;
+		}
+
+		private async void Initialize()
+		{
+			await UpdateModelAsync();
 		}
 
 		protected override async void OnAppearing()
