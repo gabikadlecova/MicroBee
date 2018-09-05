@@ -39,6 +39,11 @@ namespace MicroBee
 			Initialize();
 		}
 
+		//protected override void OnAppearing()
+		//{
+		//	Initialize();
+		//}
+
 		private async void Initialize()
 		{
 			Model.Categories = await App.ItemService.GetCategoriesAsync();

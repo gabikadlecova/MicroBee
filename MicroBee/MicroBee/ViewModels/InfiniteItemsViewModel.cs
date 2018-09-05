@@ -57,7 +57,7 @@ namespace MicroBee.ViewModels
 				OnPropertyChanged();
 			}
 		}
-		public ICommand RefreshCommand => new Command(async () =>
+		public ICommand RefreshCommand => new Command(() =>
 		{
 			IsRefreshing = true;
 
