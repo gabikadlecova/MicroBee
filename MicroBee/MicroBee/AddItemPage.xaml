@@ -3,24 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
-             x:Class="MicroBee.AddItemPage">
-  <ContentPage.BindingContext>
-			<viewModels:AddItemViewModel x:Name="Model"/>
-  </ContentPage.BindingContext>  
+             x:Class="MicroBee.AddItemPage" Style="{StaticResource MicroBeePageStyle}">
+	<ContentPage.BindingContext>
+		<viewModels:AddItemViewModel x:Name="Model"/>
+	</ContentPage.BindingContext>
 	<ContentPage.Content>
-	    <StackLayout>
-		    <StackLayout Orientation="Horizontal">
-			    <StackLayout>
-				    <Entry Text="{Binding Item.Title}" />
-				    <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
-			    </StackLayout>
-			    <Image Source="{Binding ImageSource}" />
-			    <Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
-		    </StackLayout>
+		<ScrollView>
+			<StackLayout>
+				<Label Text="Title"/>
+				<Entry Text="{Binding Item.Title}" WidthRequest="150" />
+				<Picker Title="Category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}" WidthRequest="150"/>
+				<ScrollView >
+					<StackLayout>
+						<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
+						<Image Source="{Binding ImageSource}" Aspect="AspectFit" />
+					</StackLayout>
+				</ScrollView>
 
-		    <Entry Text="{Binding Item.Description}" />
-		    <Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
-		    <Button Text="Submit" Clicked="SubmitButton_OnClicked" />
-	    </StackLayout>
-    </ContentPage.Content>
+				<Label Text="Description"/>
+				<Editor Text="{Binding Item.Description}" Style="{StaticResource MultilineEditor}"/>
+				<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
+				<Button Text="Submit" Clicked="SubmitButton_OnClicked" />
+			</StackLayout>
+		</ScrollView>
+	</ContentPage.Content>
 </ContentPage>

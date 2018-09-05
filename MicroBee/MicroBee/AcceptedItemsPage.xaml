@@ -2,11 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
-             x:Class="MicroBee.AcceptedItemsPage">
+             xmlns:converters="clr-namespace:MicroBee.ViewModels.Converters;assembly=MicroBee"
+             x:Class="MicroBee.AcceptedItemsPage" Style="{StaticResource MicroBeePageStyle}">
 	<ContentPage.BindingContext>
 		<viewModels:ItemsViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
+
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<converters:CountZeroConverter x:Key="intZeroToBool" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
 	<ContentPage.Content>
+		<Label IsVisible="{Binding UserItems.Count, Converter={StaticResource intZeroToBool}}" Text="There are no accepted jobs yet" FontAttributes="Italic" FontSize="Medium"/>
 		<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
 			<ListView.ItemTemplate>
 				<DataTemplate>

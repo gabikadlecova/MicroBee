@@ -6,6 +6,6 @@
 			 xmlns:local="clr-namespace:MicroBee"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels"
              xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
-             x:Class="MicroBee.ItemCarouselPage">
+             x:Class="MicroBee.ItemCarouselPage" Style="{StaticResource MicroBeePageStyle}">
 
 </CarouselPage>

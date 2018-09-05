@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MicroBee.ItemMasterDetailPage"
              xmlns:pages="clr-namespace:MicroBee"
-                  Title="MicroBee jobs">
+                  Title="MicroBee jobs" Style="{StaticResource MicroBeePageStyle}">
 	<MasterDetailPage.Master>
 		<pages:ItemMasterDetailPageMaster x:Name="MasterPage" />
 	</MasterDetailPage.Master>

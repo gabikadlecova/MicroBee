@@ -4,7 +4,7 @@
              xmlns:scroll="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              xmlns:system="clr-namespace:System;assembly=netstandard"
-             x:Class="MicroBee.ItemsPage" Title="Job list">
+             x:Class="MicroBee.ItemsPage" Title="Job list" Style="{StaticResource MicroBeePageStyle}" Padding="0" >
 	<ContentPage.BindingContext>
 		<viewModels:InfiniteItemsViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
@@ -20,7 +20,7 @@
 					<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
 							SelectedItem="{Binding SelectedCategory}" />
 
-					<Button Text="Refresh" Command="{Binding RefreshCommand}">
+					<Button Text="Refresh" Command="{Binding RefreshCommand}" HorizontalOptions="FillAndExpand">
 						<Button.IsVisible>
 							<OnPlatform x:TypeArguments="system:Boolean">
 								<On Platform="UWP" Value="True"/>

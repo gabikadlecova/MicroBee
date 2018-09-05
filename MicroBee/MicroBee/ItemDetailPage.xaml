@@ -3,46 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:media="clr-namespace:Plugin.Media;assembly=Plugin.Media"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
-             x:Class="MicroBee.ItemDetailPage">
+             x:Class="MicroBee.ItemDetailPage" Style="{StaticResource MicroBeePageStyle}">
 	<ContentPage.BindingContext>
 		<viewModels:DetailViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
 
 	<ContentPage.Content>
-		<StackLayout>
-			<!-- Detail StackLayout (IsEditing == false) -->
-			<StackLayout x:Name="detailLayout" IsVisible="True" >
-				<StackLayout Orientation="Horizontal">
-					<StackLayout>
-						<Label Text="{Binding Item.Title}" LineBreakMode="WordWrap"/>
-						<Label Text="{Binding Item.OwnerName}" />
-						<Label Text="{Binding Item.Category.Name}" FontAttributes="Italic" />
-						<Label Text="{Binding Item.Price, StringFormat='{0:C}'}" />
-					</StackLayout>
-					<Image Source="{Binding ItemImage}" />
+		<ScrollView>
+			<StackLayout>
+				<!-- Detail StackLayout (IsEditing == false) -->
+				<StackLayout x:Name="detailLayout" IsVisible="True"  >
+
+
+					<RelativeLayout>
+
+						<StackLayout x:Name="ItemData" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}" >
+							<Label Text="{Binding Item.Title}" FontAttributes="Bold" FontSize="Medium" />
+							<Label Text="{Binding Item.OwnerName, StringFormat='Owner: {0}'}" />
+							<Label Text="{Binding Item.Category.Name, StringFormat='Category: {0}'}" FontAttributes="Italic" />
+							<Label Text="{Binding Item.Price, StringFormat='{0:C}'}" />
+						</StackLayout>
+						<Image Source="{Binding ItemImage}"
+									 Aspect="AspectFit"
+									 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=ItemData, Property=Width, Factor=1}"
+									 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}" />
+
+					</RelativeLayout>
+
+					<Label Text="Description" FontAttributes="Bold" />
+					<Label Text="{Binding Item.Description}" />
+					<Button x:Name="EditButton" Text="Edit" IsVisible="{Binding IsUserOwner}" Clicked="EditButton_OnClicked"/>
+					<Button x:Name="AcceptJobButton" Text="Accept job" IsEnabled="{Binding CanAccept}" Clicked="AcceptJobButton_OnClicked"/>
 				</StackLayout>
 
-				<Label Text="{Binding Item.Description}" />
-				<Button x:Name="EditButton" Text="Edit" IsVisible="{Binding IsUserOwner}" Clicked="EditButton_OnClicked"/>
-				<Button x:Name="AcceptJobButton" Text="Accept job" IsEnabled="{Binding CanAccept}" Clicked="AcceptJobButton_OnClicked"/>
-			</StackLayout>
+				<!-- Edit StackLayout (IsEditing == true) -->
+				<StackLayout x:Name="editLayout" IsVisible="False" >
 
-			<!-- Edit StackLayout (IsEditing == true) -->
-			<StackLayout x:Name="editLayout" IsVisible="False" >
-				<StackLayout Orientation="Horizontal">
-					<StackLayout>
+					<StackLayout x:Name="ItemDataE" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}">
+
+						<Label Text="Title" FontAttributes="Bold" />
 						<Entry Text="{Binding Item.Title}" />
-						<Label Text="{Binding Item.OwnerName}" />
-						<Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
-					</StackLayout>
-					<Image Source="{Binding ItemImage}" />
-					<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
-				</StackLayout>
+						<Picker Title="Category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
 
-				<Entry Text="{Binding Item.Description}" />
-				<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
-				<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
+						<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
+						<Image Source="{Binding ItemImage}" Aspect="AspectFit"/>
+					</StackLayout>
+
+					<Label Text="Description" FontAttributes="Bold" />
+					<Editor Text="{Binding Item.Description}" Style="{StaticResource MultilineEditor}"/>
+					<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
+					<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
+				</StackLayout>
 			</StackLayout>
-		</StackLayout>
+		</ScrollView>
 	</ContentPage.Content>
 </ContentPage>
