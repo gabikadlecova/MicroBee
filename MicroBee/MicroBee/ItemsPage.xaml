@@ -4,23 +4,21 @@
              xmlns:scroll="clr-namespace:Xamarin.Forms.Extended;assembly=Xamarin.Forms.Extended.InfiniteScrolling"
              xmlns:viewModels="clr-namespace:MicroBee.ViewModels;assembly=MicroBee"
              xmlns:system="clr-namespace:System;assembly=netstandard"
-             x:Class="MicroBee.ItemsPage">
+             x:Class="MicroBee.ItemsPage" Title="Job list">
 	<ContentPage.BindingContext>
 		<viewModels:InfiniteItemsViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
 
 	<StackLayout>
-		<Label>Micro jobs</Label>
-		
 		<ListView x:Name="itemListView" ItemsSource="{Binding Items}" RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}">
 			<ListView.Behaviors>
 				<scroll:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
 			</ListView.Behaviors>
 
 			<ListView.Header>
-				<StackLayout Orientation="Horizontal">
-				<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
-						SelectedItem="{Binding SelectedCategory}" />
+				<StackLayout Style="{StaticResource HorizontalStackMenu}">
+					<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
+							SelectedItem="{Binding SelectedCategory}" />
 
 					<Button Text="Refresh" Command="{Binding RefreshCommand}">
 						<Button.IsVisible>

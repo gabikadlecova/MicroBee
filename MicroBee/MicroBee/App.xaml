@@ -3,6 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MicroBee.App">
 	<Application.Resources>
-    
+		<Style x:Key="HorizontalStackMenu" TargetType="StackLayout">
+			<Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+			<Setter Property="Padding" Value="0,20,20,20"/>
+			<Setter Property="Orientation" Value="Horizontal"/>
+		</Style>
 	</Application.Resources>
+
+
 </Application>

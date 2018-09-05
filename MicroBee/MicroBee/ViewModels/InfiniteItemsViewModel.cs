@@ -57,13 +57,13 @@ namespace MicroBee.ViewModels
 				OnPropertyChanged();
 			}
 		}
-		public ICommand RefreshCommand => new Command(() =>
+		public ICommand RefreshCommand => new Command(() =>	
 		{
 			IsRefreshing = true;
 
 			Items.Reset();
 
-			IsRefreshing = false;
+			IsRefreshing = false;	
 		});
 	}
 }
