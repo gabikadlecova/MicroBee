@@ -42,7 +42,15 @@ namespace MicroBee.Web.Services
 
 		public IEnumerable<MicroItem> GetOpenItems(int pageNumber, int pageSize, string category, string titleFilter)
 		{
-			var items = _repository.GetAll().Where(item => item.Category.Name == category && item.Title.Contains(titleFilter));
+			IQueryable<MicroItem> items;
+			if (category == null)
+			{
+				items = _repository.GetAll().Where(item => item.Title.Contains(titleFilter));
+			}
+			else
+			{
+				items = _repository.GetAll().Where(item => item.Category.Name == category && item.Title.Contains(titleFilter));
+			}
 			return items.OrderByDescending(m => m.Id).Skip(pageNumber * pageSize).Take(pageSize);
 		}
 
