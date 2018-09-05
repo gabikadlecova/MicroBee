@@ -33,10 +33,15 @@ namespace MicroBee.Web.Controllers
 		// GET api/items
 
 		[HttpGet]
-		public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize)
+		public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize, string title)
 		{
+			if (string.IsNullOrEmpty(title))
+			{
+				return _itemService.GetOpenItems(pageNumber, pageSize).ToList();
+			}
+
 			// returns only items which have no worker user assigned
-			return _itemService.GetOpenItems(pageNumber, pageSize).ToList();
+			return _itemService.GetOpenItems(pageNumber, pageSize, null, title).ToList();
 		}
 
 		// GET api/items/itemId
