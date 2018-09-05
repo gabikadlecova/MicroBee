@@ -19,8 +19,12 @@
 				<StackLayout Style="{StaticResource HorizontalStackMenu}">
 					<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
 							SelectedItem="{Binding SelectedCategory}" />
+					<StackLayout Orientation="Horizontal">
+						<Label Text="Search: "/>
+						<Entry Completed="Entry_OnCompleted"/>
+					</StackLayout>
 
-					<Button Text="Refresh" Command="{Binding RefreshCommand}" HorizontalOptions="FillAndExpand">
+					<Button Text="Refresh" Command="{Binding RefreshCommand}" >
 						<Button.IsVisible>
 							<OnPlatform x:TypeArguments="system:Boolean">
 								<On Platform="UWP" Value="True"/>

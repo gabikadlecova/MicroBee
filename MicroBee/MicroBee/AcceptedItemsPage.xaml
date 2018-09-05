@@ -15,19 +15,21 @@
 	</ContentPage.Resources>
 
 	<ContentPage.Content>
-		<Label IsVisible="{Binding UserItems.Count, Converter={StaticResource intZeroToBool}}" Text="There are no accepted jobs yet" FontAttributes="Italic" FontSize="Medium"/>
-		<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ViewCell>
-						<StackLayout>
-							<Label Text="{Binding Title}" FontAttributes="Bold"/>
-							<Label Text="{Binding Category.Name}" />
-							<Label Text="{Binding OwnerName, StringFormat='Owner: {0}'}" />
-						</StackLayout>
-					</ViewCell>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+		<StackLayout>
+			<Label IsVisible="{Binding UserItems.Count, Converter={StaticResource intZeroToBool}}" Text="There are no accepted jobs yet" FontAttributes="Italic" FontSize="Small"/>
+			<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<StackLayout>
+								<Label Text="{Binding Title}" FontAttributes="Bold"/>
+								<Label Text="{Binding Category.Name}" />
+								<Label Text="{Binding OwnerName, StringFormat='Owner: {0}'}" />
+							</StackLayout>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

@@ -10,9 +10,9 @@ namespace MicroBee.ViewModels.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType != typeof(int))
+			if (targetType != typeof(bool))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("The target type must be bool.");
 			}
 
 			int intVal = (int)value;

@@ -35,6 +35,25 @@ namespace MicroBee.Data
 			Authenticated = false;
 		}
 
+		public async Task<bool> TryLoginAsync()
+		{
+			string username = await SecureStorage.GetAsync("username");
+			string password = await SecureStorage.GetAsync("password");
+
+			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+			{
+				return false;
+			}
+
+			await LoginAsync(new LoginModel()
+			{
+				Username = username,
+				Password = password
+			});
+
+			return true;
+		}
+
 		public async Task LoginAsync(LoginModel model)
 		{
 			Logout();

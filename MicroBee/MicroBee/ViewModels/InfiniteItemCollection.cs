@@ -45,6 +45,18 @@ namespace MicroBee.ViewModels
 			}
 		}
 
+		private string _titleSearch;
+
+		public string TitleSearch
+		{
+			get => _titleSearch;
+			set
+			{
+				_titleSearch = value;
+				Reset();
+			}
+		}
+
 		public InfiniteItemCollection(IMicroItemService service)
 		{
 			_service = service;
@@ -66,14 +78,9 @@ namespace MicroBee.ViewModels
 			LoadingMore?.Invoke(this, new LoadingMoreEventArgs(true));
 
 			List<MicroItem> nextItems = null;
-			if (Category != null)
-			{
-				nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize, Category.Name);
-			}
-			else
-			{
-				nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize);
-			}
+
+			nextItems = await _service.GetMicroItemsAsync(_currentPage, PageSize, Category?.Name, TitleSearch);
+
 
 			foreach (var item in nextItems)
 			{
@@ -85,7 +92,7 @@ namespace MicroBee.ViewModels
 
 				Add(new InfiniteItemElement() { Item = item, ImageData = imageData });
 			}
-			
+
 			_currentPage++;
 			if (nextItems.Count < PageSize)
 			{
@@ -100,15 +107,15 @@ namespace MicroBee.ViewModels
 		public bool IsLoadingMore { get; private set; }
 		public event EventHandler<LoadingMoreEventArgs> LoadingMore;
 
-		
+
 	}
 	class InfiniteItemElement
 	{
 		public MicroItem Item { get; set; }
 		public byte[] ImageData { get; set; }
-		public ImageSource ItemImage => ImageData == null ? null : ImageSource.FromStream(() =>  new MemoryStream(ImageData));
+		public ImageSource ItemImage => ImageData == null ? null : ImageSource.FromStream(() => new MemoryStream(ImageData));
 
-		
+
 
 	}
 }

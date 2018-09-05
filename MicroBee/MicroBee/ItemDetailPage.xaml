@@ -51,7 +51,7 @@
 
 					<Label Text="Description" FontAttributes="Bold" />
 					<Editor Text="{Binding Item.Description}" Style="{StaticResource MultilineEditor}"/>
-					<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
+					<Entry Text="{Binding Item.Price}" />
 					<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
 				</StackLayout>
 			</StackLayout>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MicroBee.ViewModels;
 using Xamarin.Forms;
 
@@ -51,5 +52,11 @@ namespace MicroBee
 			await Model.Items.LoadMoreAsync();
 		}
 
+
+		private void Entry_OnCompleted(object sender, EventArgs e)
+		{
+			var entry = (Entry) sender;
+			Model.Items.TitleSearch = entry.Text;
+		}
 	}
 }

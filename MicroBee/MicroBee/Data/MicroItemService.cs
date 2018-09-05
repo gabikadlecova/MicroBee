@@ -46,7 +46,7 @@ namespace MicroBee.Data
 			{
 				new KeyValuePair<string, object>("pageNumber", pageNumber),
 				new KeyValuePair<string, object>("pageSize", pageSize),
-				new KeyValuePair<string, object>("titlefilter", titleFilter)
+				new KeyValuePair<string, object>("title", titleFilter)
 			};
 
 			return await Service.GetAsync<List<MicroItem>>("api/items/" + category, parameters);

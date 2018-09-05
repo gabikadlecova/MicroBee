@@ -27,6 +27,11 @@ namespace MicroBee.Data
 		    }
 	    }
 
+	    public async Task<bool> TryLoginAsync()
+	    {
+		    return await Service.TryLoginAsync();
+	    }
+
 	    public void Logout()
 	    {
 		    Service.Logout();

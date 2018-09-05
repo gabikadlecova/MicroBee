@@ -17,6 +17,14 @@ namespace MicroBee
 			InitializeComponent ();
 		}
 
+		protected override async void OnAppearing()
+		{
+			if (await App.AccountService.TryLoginAsync())
+			{
+				App.Current.MainPage = new ItemMasterDetailPage();
+			}
+		}
+
 		private void LoginButton_OnClicked(object sender, EventArgs e)
 		{
 			var loginPage = new LoginPage();

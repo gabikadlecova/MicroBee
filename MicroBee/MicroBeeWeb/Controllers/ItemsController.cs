@@ -56,13 +56,16 @@ namespace MicroBee.Web.Controllers
 
 		// GET api/items/category
 		[HttpGet("{category}")]
-		public ActionResult<List<MicroItem>> Get(string category, int pageNumber, int pageSize)
+		public ActionResult<List<MicroItem>> Get(string category, int pageNumber, int pageSize, string title)
 		{
 			if (string.IsNullOrEmpty(category))
 			{
 				return Get(pageNumber, pageSize);
 			}
-			return _itemService.GetOpenItems(pageNumber, pageSize, category).ToList();
+
+			return string.IsNullOrEmpty(title)
+				? _itemService.GetOpenItems(pageNumber, pageSize, category).ToList() 
+				: _itemService.GetOpenItems(pageNumber, pageSize, category, title).ToList();
 		}
 
 		// POST api/items
