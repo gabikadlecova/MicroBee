@@ -13,6 +13,9 @@ using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	/// <summary>
+	/// A carousel page for displaying item details
+	/// </summary>
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ItemCarouselPage : CarouselPage
 	{
@@ -20,5 +23,7 @@ namespace MicroBee
 		{
 			BindingContext = this;
 		}
+
+		// for extension purpose
 	}
 }

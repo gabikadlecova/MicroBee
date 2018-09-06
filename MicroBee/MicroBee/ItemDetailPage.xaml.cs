@@ -14,6 +14,9 @@ namespace MicroBee
 	public partial class ItemDetailPage : ContentPage
 	{
 		private int _itemId;
+		/// <summary>
+		/// Id of the item detail
+		/// </summary>
 		public int ItemId
 		{
 			get => _itemId;
@@ -26,6 +29,9 @@ namespace MicroBee
 
 		private bool _isEditEnabled;
 		private bool _isAcceptEnabled;
+		/// <summary>
+		/// Determines whether it is allowed to edit
+		/// </summary>
 		public bool IsEditEnabled
 		{
 			get => _isEditEnabled;
@@ -35,6 +41,9 @@ namespace MicroBee
 				EditButton.IsVisible = IsEditEnabled;
 			}
 		}
+		/// <summary>
+		/// Determines whether it is allowed to accept the job
+		/// </summary>
 		public bool IsAcceptEnabled
 		{
 			get => _isAcceptEnabled;
@@ -45,6 +54,9 @@ namespace MicroBee
 			}
 		}
 
+		/// <summary>
+		/// Returns true if IsEditEnabled and the page is in edit mode
+		/// </summary>
 		private bool _isEditing;
 		public bool IsEditing
 		{
@@ -78,6 +90,7 @@ namespace MicroBee
 
 		private async void AcceptJobButton_OnClicked(object sender, EventArgs e)
 		{
+			//accepts job
 			if (!App.IsUserAuthenticated)
 			{
 				throw new InvalidOperationException("User must be logged in to accept the job");
@@ -91,6 +104,8 @@ namespace MicroBee
 
 		private async Task UpdateModelAsync()
 		{
+			//gets the updated data
+
 			var item = await App.ItemService.GetMicroItemAsync(ItemId);
 			Model.Item = item;
 
@@ -107,11 +122,13 @@ namespace MicroBee
 
 		private void EditButton_OnClicked(object sender, EventArgs e)
 		{
+			//changes page from detail to edit
 			IsEditing = true;
 		}
 
 		private async void SubmitEditButton_OnClicked(object sender, EventArgs e)
 		{
+			//upload with or without image
 			if (Model.IsImageChanged)
 			{
 				await App.ItemService.UpdateMicroItemAsync(Model.Item, Model.ImageData);
@@ -121,6 +138,7 @@ namespace MicroBee
 				await App.ItemService.UpdateMicroItemAsync(Model.Item, null);
 			}
 
+			//updated data
 			await UpdateModelAsync();
 
 			Model.IsImageChanged = false;
@@ -142,6 +160,7 @@ namespace MicroBee
 				Model.ImageData = stream.ToArray();
 			}
 
+			//image should be uploaded as well
 			Model.IsImageChanged = true;
 		}
 	}

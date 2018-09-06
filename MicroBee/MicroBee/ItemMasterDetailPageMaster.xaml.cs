@@ -29,6 +29,7 @@ namespace MicroBee
 
 			public ItemMasterDetailPageMasterViewModel()
 			{
+				//should be loaded/stored in resources or config
 				MenuItems = new ObservableCollection<ItemMasterDetailPageMenuItem>()
 				{
 					new ItemMasterDetailPageMenuItem { Title = "Job list", TargetType = typeof(ItemsPage)},

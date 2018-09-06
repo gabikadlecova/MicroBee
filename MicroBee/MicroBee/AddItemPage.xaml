@@ -7,12 +7,17 @@
 	<ContentPage.BindingContext>
 		<viewModels:AddItemViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
+
 	<ContentPage.Content>
 		<ScrollView>
+
+			<!--Add job form data-->
 			<StackLayout>
 				<Label Text="Title"/>
 				<Entry Text="{Binding Item.Title}" WidthRequest="150" />
 				<Picker Title="Category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}" WidthRequest="150"/>
+				
+				<!--Image data-->
 				<ScrollView >
 					<StackLayout>
 						<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
@@ -25,6 +30,7 @@
 				<Entry Text="{Binding Item.Price, StringFormat='{0:C}'}" />
 				<Button Text="Submit" Clicked="SubmitButton_OnClicked" />
 			</StackLayout>
+
 		</ScrollView>
 	</ContentPage.Content>
 </ContentPage>

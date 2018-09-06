@@ -8,21 +8,27 @@
 		<viewModels:DetailViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
 
+
 	<ContentPage.Content>
 		<ScrollView>
 			<StackLayout>
+				<!-- *************************************** -->
 				<!-- Detail StackLayout (IsEditing == false) -->
+				<!-- *************************************** -->
 				<StackLayout x:Name="detailLayout" IsVisible="True"  >
 
 
 					<RelativeLayout>
 
+						<!--Basic data-->
 						<StackLayout x:Name="ItemData" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}" >
 							<Label Text="{Binding Item.Title}" FontAttributes="Bold" FontSize="Medium" />
 							<Label Text="{Binding Item.OwnerName, StringFormat='Owner: {0}'}" />
 							<Label Text="{Binding Item.Category.Name, StringFormat='Category: {0}'}" FontAttributes="Italic" />
 							<Label Text="{Binding Item.Price, StringFormat='{0:C}'}" />
 						</StackLayout>
+
+						<!--Image-->
 						<Image Source="{Binding ItemImage}"
 									 Aspect="AspectFit"
 									 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=ItemData, Property=Width, Factor=1}"
@@ -30,31 +36,39 @@
 
 					</RelativeLayout>
 
+					<!--More specific data and actions-->
 					<Label Text="Description" FontAttributes="Bold" />
 					<Label Text="{Binding Item.Description}" />
 					<Button x:Name="EditButton" Text="Edit" IsVisible="{Binding IsUserOwner}" Clicked="EditButton_OnClicked"/>
 					<Button x:Name="AcceptJobButton" Text="Accept job" IsEnabled="{Binding CanAccept}" Clicked="AcceptJobButton_OnClicked"/>
 				</StackLayout>
 
+				<!-- ************************************ -->
 				<!-- Edit StackLayout (IsEditing == true) -->
+				<!-- ************************************ -->
 				<StackLayout x:Name="editLayout" IsVisible="False" >
 
 					<StackLayout x:Name="ItemDataE" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}">
 
+						<!--Edit basic data-->
 						<Label Text="Title" FontAttributes="Bold" />
 						<Entry Text="{Binding Item.Title}" />
 						<Picker Title="Category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding Item.Category, Mode=OneWayToSource}"/>
 
+						<!--Edit image-->
 						<Button Text="Pick image" IsEnabled="{Binding IsPickPhotoSupported, Source={x:Static media:CrossMedia.Current}}" Clicked="ChooseImage_OnClicked"/>
 						<Image Source="{Binding ItemImage}" Aspect="AspectFit"/>
 					</StackLayout>
 
+					<!--Edit more specific data-->
 					<Label Text="Description" FontAttributes="Bold" />
 					<Editor Text="{Binding Item.Description}" Style="{StaticResource MultilineEditor}"/>
 					<Entry Text="{Binding Item.Price}" />
 					<Button Text="Submit" IsVisible="{Binding IsUserOwner}" Clicked="SubmitEditButton_OnClicked" />
 				</StackLayout>
+
 			</StackLayout>
+
 		</ScrollView>
 	</ContentPage.Content>
 </ContentPage>

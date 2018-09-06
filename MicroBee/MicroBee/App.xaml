@@ -8,11 +8,13 @@
 			<Setter Property="Orientation" Value="Horizontal"/>
 		</Style>
 
+		<!--Editor style for multiline descriptions-->
 		<Style x:Key="MultilineEditor" TargetType="Editor">
 			<Setter Property="AutoSize" Value="TextChanges" />
 			<Setter Property="HeightRequest" Value="75" />
 		</Style>
 
+		<!--Default page style-->
 		<Style x:Key="MicroBeePageStyle" TargetType="Page" >
 			<Setter Property="Padding">
 				<Setter.Value>

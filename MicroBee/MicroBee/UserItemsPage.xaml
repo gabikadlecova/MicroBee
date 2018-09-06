@@ -8,16 +8,21 @@
 	</ContentPage.BindingContext>
 	<ContentPage.Content>
 		<StackLayout>
+			<!--Add job button-->
 			<Button Text="Add job" Clicked="AddButton_OnClicked"/>
+
+			<!--Created jobs list-->
 			<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell>
+
 							<StackLayout>
 								<Label Text="{Binding Title}" FontAttributes="Bold"/>
 								<Label Text="{Binding Category.Name}" />
 								<Label Text="{Binding WorkerName, StringFormat='Worker: {0}'}" />
 							</StackLayout>
+
 						</ViewCell>
 					</DataTemplate>
 				</ListView.ItemTemplate>

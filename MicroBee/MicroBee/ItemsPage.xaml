@@ -15,12 +15,15 @@
 				<scroll:InfiniteScrollBehavior IsLoadingMore="{Binding Items.IsLoadingMore}" />
 			</ListView.Behaviors>
 
+			<!--Header contains filtering (and possibly refresh button)-->
 			<ListView.Header>
 				<StackLayout Style="{StaticResource HorizontalStackMenu}">
+					<!--Category filter-->
 					<Picker Title="Select job category" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}"
 							SelectedItem="{Binding SelectedCategory}" />
+					<!--Title search filter-->
 					<Entry Completed="Entry_OnCompleted" WidthRequest="100"/>
-
+					<!--For UWP, refresh button (Pull refresh not implemented as for now)-->
 					<Button Text="Refresh" Command="{Binding RefreshCommand}" >
 						<Button.IsVisible>
 							<OnPlatform x:TypeArguments="system:Boolean">
@@ -29,12 +32,14 @@
 							</OnPlatform>
 						</Button.IsVisible>
 					</Button>
+
 				</StackLayout>
 			</ListView.Header>
 
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
+
 						<StackLayout Orientation="Horizontal">
 							<Image Aspect="AspectFit"  IsVisible="True"  Source="{Binding ItemImage}" WidthRequest="100" HeightRequest="100" HorizontalOptions="Fill"
 							       VerticalOptions="Fill" />
@@ -45,6 +50,7 @@
 								<Label Text="{Binding Item.Description}" LineBreakMode="TailTruncation" />
 							</StackLayout>
 						</StackLayout>
+
 					</ViewCell>
 				</DataTemplate>
 			</ListView.ItemTemplate>

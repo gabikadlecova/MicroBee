@@ -12,6 +12,9 @@ using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	/// <summary>
+	/// A page which serves as a form for adding a new job
+	/// </summary>
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class AddItemPage : ContentPage
 	{
@@ -35,8 +38,10 @@ namespace MicroBee
 				throw new InvalidOperationException("User must be logged in to add an item.");
 			}
 
+			//adds the job
 			Model.Item.OwnerName = App.UserName;
 			await App.ItemService.AddMicroItemAsync(Model.Item, Model.ImageData);
+
 			AddSucceeded?.Invoke(this, EventArgs.Empty);
 		}
 
@@ -48,6 +53,7 @@ namespace MicroBee
 				return;
 			}
 
+			//gets image (byte array) data from the file
 			using (MemoryStream stream = new MemoryStream())
 			{
 				file.GetStream().CopyTo(stream);

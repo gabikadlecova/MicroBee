@@ -4,6 +4,8 @@
              x:Class="MicroBee.RegisterPage" Style="{StaticResource MicroBeePageStyle}">
 	<ContentPage.Content>
 		<StackLayout>
+
+			<!--Register data form-->
 			<StackLayout>
 				<Label Text="Username"/>
 				<Entry Text="{Binding RegisterData.Username}"/>
@@ -16,8 +18,13 @@
 				<Label Text="E-mail" />
 				<Entry Text="{Binding RegisterData.Email}"/>
 			</StackLayout>
+
+			<!--Submit button-->
 			<Button Text="Register" Clicked="RegisterSubmitButton_OnClicked"/>
+
+			<!--Error label is shown after register failure-->
 			<Label x:Name="errorLabel" Text="Register failed, please try again" TextColor="Crimson" IsVisible="False"/>
+
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

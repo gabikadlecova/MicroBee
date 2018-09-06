@@ -9,6 +9,9 @@ using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	/// <summary>
+	/// Represents a user profile detail page and logout interface
+	/// </summary>
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ProfilePage : ContentPage
 	{

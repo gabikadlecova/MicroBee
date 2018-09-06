@@ -11,6 +11,9 @@ using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	/// <summary>
+	/// A page which shows a list of accepted jobs of the current user
+	/// </summary>
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class AcceptedItemsPage : ContentPage
 	{
@@ -26,6 +29,8 @@ namespace MicroBee
 		}
 		private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
+			//creates a carousel page with selected item the same as the selected item of the list view (by content).
+
 			var selectedItem = (MicroItem)((ListView)sender).SelectedItem;
 			if (selectedItem == null)
 			{

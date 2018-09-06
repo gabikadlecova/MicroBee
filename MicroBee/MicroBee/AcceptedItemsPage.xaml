@@ -8,15 +8,18 @@
 		<viewModels:ItemsViewModel x:Name="Model"/>
 	</ContentPage.BindingContext>
 
+
 	<ContentPage.Resources>
 		<ResourceDictionary>
-			<converters:CountZeroConverter x:Key="intZeroToBool" />
+			<!--Converts count to true if it is 0-->
+			<converters:CountZeroConverter x:Key="IntZeroToBool" />
 		</ResourceDictionary>
 	</ContentPage.Resources>
 
 	<ContentPage.Content>
 		<StackLayout>
-			<Label IsVisible="{Binding UserItems.Count, Converter={StaticResource intZeroToBool}}" Text="There are no accepted jobs yet" FontAttributes="Italic" FontSize="Small"/>
+			<!--When no items are available, message is shown instead-->
+			<Label IsVisible="{Binding UserItems.Count, Converter={StaticResource IntZeroToBool}}" Text="There are no accepted jobs yet" FontAttributes="Italic" FontSize="Small"/>
 			<ListView ItemsSource="{Binding UserItems}" ItemSelected="ListView_OnItemSelected">
 				<ListView.ItemTemplate>
 					<DataTemplate>

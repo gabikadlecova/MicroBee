@@ -4,6 +4,7 @@
              x:Class="MicroBee.LoginPage" Style="{StaticResource MicroBeePageStyle}">
 	<ContentPage.Content>
 		<StackLayout>
+			<!--Login data form-->
 			<StackLayout>
 				<Label Text="Login"/>
 				<Entry Text="{Binding LoginData.Username}"/>
@@ -13,6 +14,8 @@
 				<Entry IsPassword="True"  Text="{Binding LoginData.Password}"/>
 			</StackLayout>
 			<Button Text="Login" Clicked="LoginSubmitButton_OnClicked"/>
+
+			<!--Error label, visible after login failure-->
 			<Label x:Name="errorLabel" Text="Login failed, please try again" TextColor="Crimson" IsVisible="False" />
 		</StackLayout>
 	</ContentPage.Content>

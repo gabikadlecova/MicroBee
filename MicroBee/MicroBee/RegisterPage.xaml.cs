@@ -9,6 +9,9 @@ using Xamarin.Forms.Xaml;
 
 namespace MicroBee
 {
+	/// <summary>
+	/// Represents a register form page
+	/// </summary>
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class RegisterPage : ContentPage
 	{
