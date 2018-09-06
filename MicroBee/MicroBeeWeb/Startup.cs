@@ -87,7 +87,7 @@ namespace MicroBee.Web
 					};
 				});
 
-			
+			//TBD
 			//services.AddHsts(options =>
 			//{
 			//	options.Preload = true;
@@ -113,6 +113,8 @@ namespace MicroBee.Web
 			else
 			{
 				app.UseExceptionHandler("/error");
+
+				//TBD
 				//app.UseHsts();
 			}
 
@@ -120,6 +122,7 @@ namespace MicroBee.Web
 
 			app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
+			//TBD
 			//app.UseHttpsRedirection();
 			app.UseMvc();
 		}

@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MicroBee.Web.Controllers
 {
+	/// <summary>
+	/// Provides item bound API
+	/// </summary>
 	[Route("api/[controller]")]
 	public class ItemsController : Controller
 	{
@@ -31,10 +34,12 @@ namespace MicroBee.Web.Controllers
 
 
 		// GET api/items
-
 		[HttpGet]
 		public ActionResult<List<MicroItem>> Get(int pageNumber, int pageSize, string title)
 		{
+			//todo to be redone (filtering)
+
+			// does not apply search filter
 			if (string.IsNullOrEmpty(title))
 			{
 				return _itemService.GetOpenItems(pageNumber, pageSize).ToList();
@@ -44,8 +49,7 @@ namespace MicroBee.Web.Controllers
 			return _itemService.GetOpenItems(pageNumber, pageSize, null, title).ToList();
 		}
 
-		// GET api/items/itemId
-
+		// GET api/items/detail/itemId
 		[HttpGet("detail/{itemId}")]
 		public async Task<ActionResult<MicroItem>> Get(int itemId)
 		{
@@ -63,6 +67,9 @@ namespace MicroBee.Web.Controllers
 		[HttpGet("{category}")]
 		public ActionResult<List<MicroItem>> Get(string category, int pageNumber, int pageSize, string title)
 		{
+			//TODO to be redone (filtering)
+
+			//gets items from a specified category with or without a search filter applied
 			return string.IsNullOrEmpty(title)
 				? _itemService.GetOpenItems(pageNumber, pageSize, category).ToList() 
 				: _itemService.GetOpenItems(pageNumber, pageSize, category, title).ToList();
@@ -73,6 +80,7 @@ namespace MicroBee.Web.Controllers
 		[Authorize]
 		public async Task<IActionResult> Post([FromBody]MicroItem model)
 		{
+			//only authenticated users can post an item
 			string id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (id == null)
 			{
@@ -84,10 +92,12 @@ namespace MicroBee.Web.Controllers
 				return BadRequest();
 			}
 
+			//authorized user is the owner of the item
 			var user = await _userManager.FindByIdAsync(id);
 			model.OwnerName = user.UserName;
 			model.WorkerName = null;
 
+			//item added
 			var item = await _itemService.InsertItemAsync(model);
 			if (item == null)
 			{
@@ -97,7 +107,7 @@ namespace MicroBee.Web.Controllers
 			return Ok(item);
 		}
 
-		// PUT api/items/itemId
+		// PUT api/items
 		[HttpPut]
 		[Authorize]
 		public async Task<IActionResult> Put([FromBody]MicroItem model)
@@ -107,7 +117,7 @@ namespace MicroBee.Web.Controllers
 				return BadRequest();
 			}
 
-
+			//user must be authorized and the owner of the item
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
 			{
@@ -119,6 +129,7 @@ namespace MicroBee.Web.Controllers
 				return Forbid();
 			}
 
+			//item to be updated
 			MicroItem oldItem = await _itemService.FindItemAsync(model.Id);
 
 			// assigning to properties which are allowed to be modified
@@ -127,6 +138,7 @@ namespace MicroBee.Web.Controllers
 			oldItem.Price = model.Price;
 			oldItem.Title = model.Title;
 
+			//update
 			var item = await _itemService.UpdateItemAsync(oldItem);
 			if (item == null)
 			{
@@ -136,11 +148,12 @@ namespace MicroBee.Web.Controllers
 			return NoContent();
 		}
 
-		// PUT api/items/worker/itemId
+		// PUT api/items/worker
 		[HttpPost("worker")]
 		[Authorize]
 		public async Task<IActionResult> Worker([FromBody]int itemId)
 		{
+			//anonymous workers are not allowed
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
 			{
@@ -149,29 +162,24 @@ namespace MicroBee.Web.Controllers
 
 			var user = await _userManager.FindByIdAsync(userId);
 
-			// owner cannot be worker!
+			// owner cannot be a worker!
 			bool isOwner = await IsUserOwnerAsync(userId, itemId);
 			if (isOwner)
 			{
 				return BadRequest();
 			}
 
+			//item must be updated
 			MicroItem oldItem = await _itemService.FindItemAsync(itemId);
 			oldItem.WorkerName = user.UserName;
+			oldItem.Status = ItemStatus.Accepted;
 
 			var item = await _itemService.UpdateItemAsync(oldItem);
 			if (item == null)
 			{
 				return BadRequest();
 			}
-
-			item.Status = ItemStatus.Accepted;
-			var updatedItem = await _itemService.UpdateItemAsync(item);
-			if (updatedItem == null)
-			{
-				return BadRequest();
-			}
-
+			
 			return Ok();
 		}
 
@@ -180,6 +188,7 @@ namespace MicroBee.Web.Controllers
 		[Authorize]
 		public async Task<IActionResult> Delete(int itemId)
 		{
+			//only owners can delete items
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
 			{
@@ -192,20 +201,24 @@ namespace MicroBee.Web.Controllers
 				return Forbid();
 			}
 
+			//item image and item are both deleted
 			await DeleteImage(itemId);
 			await _itemService.DeleteItemAsync(itemId);
+
 			return Ok();
 		}
 
 		[HttpGet("categories")]
 		public ActionResult<List<ItemCategory>> GetCategories()
 		{
+			//gets all categories
 			return _categoryService.GetCategories().ToList();
 		}
 
 		[HttpGet("image/{imageId}")]
 		public async Task<IActionResult> Image(int imageId)
 		{
+			//gets an image with a specified id
 			var image = await _imageService.FindImageAsync(imageId);
 			if (image == null)
 			{
@@ -224,6 +237,7 @@ namespace MicroBee.Web.Controllers
 				return BadRequest();
 			}
 
+			//only user owner can update the image of an item
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
 			{
@@ -236,11 +250,11 @@ namespace MicroBee.Web.Controllers
 				return Forbid();
 			}
 
+			//ad or update item image
 			var item = await _itemService.FindItemAsync(itemId);
-
-
 			if (item.ImageId == null)
 			{
+				//add
 				var uploaded = await _imageService.InsertImageAsync(new ItemImage() { Data = imageData });
 				if (uploaded != null)
 				{
@@ -252,6 +266,7 @@ namespace MicroBee.Web.Controllers
 			}
 			else
 			{
+				//update
 				ItemImage image = new ItemImage()
 				{
 					Id = item.ImageId.Value,
@@ -272,6 +287,7 @@ namespace MicroBee.Web.Controllers
 		[Authorize]
 		public async Task<IActionResult> DeleteImage(int itemId)
 		{
+			//only owner can delete the image
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			if (userId == null)
 			{
@@ -284,6 +300,7 @@ namespace MicroBee.Web.Controllers
 				return Forbid();
 			}
 
+			//delete image
 			var item = await _itemService.FindItemAsync(itemId);
 			if (item.ImageId == null)
 			{
@@ -292,6 +309,8 @@ namespace MicroBee.Web.Controllers
 
 			var deleteTask = _imageService.DeleteImageAsync(item.ImageId.Value);
 			item.ImageId = null;
+
+			//item has no image id associated with it now
 			await _itemService.UpdateItemAsync(item);
 			await deleteTask;
 
@@ -300,6 +319,7 @@ namespace MicroBee.Web.Controllers
 
 		private async Task<bool> IsUserOwnerAsync(string userId, int itemId)
 		{
+			//checks whether Username and OwnerName match
 			var userTask = _userManager.FindByIdAsync(userId);
 			var item = await _itemService.FindItemAsync(itemId);
 

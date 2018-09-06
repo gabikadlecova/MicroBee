@@ -20,7 +20,9 @@ namespace MicroBee.Web.DAL.Context
 		{
 			base.OnModelCreating(modelBuilder);
 			
+			//user
 			modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+			//item
 			modelBuilder.ApplyConfiguration(new MicroItemConfiguration());
 
 			modelBuilder.Entity<ItemCategory>().HasKey(c => c.Id);
