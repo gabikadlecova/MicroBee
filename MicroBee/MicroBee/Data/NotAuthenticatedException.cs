@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MicroBee.Data
 {
+	/// <summary>
+	/// Is thrown if protected data is accessed by an anonymous (not authenticated) user
+	/// </summary>
 	class NotAuthenticatedException : Exception
 	{
 		public NotAuthenticatedException()

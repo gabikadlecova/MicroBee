@@ -5,6 +5,9 @@ using System.Net.Http;
 
 namespace MicroBee.Data
 {
+	/// <summary>
+	/// Is thrown when the http request has not succeeded (e.g. not by 200 Ok)
+	/// </summary>
 	class InvalidResponseException : HttpRequestException
 	{
 		public InvalidResponseException()

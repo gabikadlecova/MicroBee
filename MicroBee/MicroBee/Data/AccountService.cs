@@ -23,6 +23,7 @@ namespace MicroBee.Data
 		    }
 		    catch (InvalidResponseException)
 		    {
+				//error occured, login failed
 			    return false;
 		    }
 	    }
@@ -46,6 +47,7 @@ namespace MicroBee.Data
 			}
 			catch (InvalidResponseException)
 			{
+				//error occured, register failed
 				return false;
 			}
 		}

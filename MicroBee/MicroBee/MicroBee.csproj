@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <None Remove="Data\IAccountService.cs~RF40dc010.TMP" />
+    <None Remove="Data\InvalidResponseException.cs~RF8b2c9ad.TMP" />
+    <None Remove="Data\Models\RegisterModel.cs~RF88b4f3b.TMP" />
     <None Remove="ItemMasterDetailPageMaster.xaml~RF3edae1.TMP" />
     <None Remove="MainPage.xaml~RF3a6c92d.TMP" />
     <None Remove="UserItemsPage.xaml.cs~RF3d811a1.TMP" />

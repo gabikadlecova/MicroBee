@@ -11,23 +11,34 @@ using Xamarin.Essentials;
 
 namespace MicroBee.Data
 {
-	public class HttpService
+	public class HttpService : IDisposable
 	{
 		private readonly HttpClient _client;
 		private readonly StringBuilder _builder = new StringBuilder();
 
 		private readonly TimeSpan _timeEpsilon = new TimeSpan(0, 0, 0, 0, 100);
+		/// <summary>
+		/// Where the login data is sent to
+		/// </summary>
 		private string LoginPath { get; }
+		/// <summary>
+		/// Where the register data is sent to
+		/// </summary>
 		private string RegisterPath { get; }
 
+		/// <summary>
+		/// Returns true if the user has been logged in
+		/// </summary>
 		public bool Authenticated { get; private set; }
+		/// <summary>
+		/// Returns the username of the current user
+		/// </summary>
 		public string Username { get; private set; }
 
 
 		public HttpService(string host, string loginPath, string registerPath)
 		{
-			_client = new HttpClient();
-			_client.BaseAddress = new Uri(host);
+			_client = new HttpClient { BaseAddress = new Uri(host) };
 
 			LoginPath = loginPath;
 			RegisterPath = registerPath;
@@ -35,11 +46,16 @@ namespace MicroBee.Data
 			Authenticated = false;
 		}
 
+		/// <summary>
+		/// Tries to log the user in with login data previously saved in the device storage.
+		/// </summary>
+		/// <returns>True if the login operation succeeded</returns>
 		public async Task<bool> TryLoginAsync()
 		{
 			string username = await SecureStorage.GetAsync("username");
 			string password = await SecureStorage.GetAsync("password");
 
+			//one of the credentials is missing
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
 				return false;
@@ -56,14 +72,19 @@ namespace MicroBee.Data
 
 		public async Task LoginAsync(LoginModel model)
 		{
+			//Previously saved data is erased
 			Logout();
 
+			//login (by jwt bearer token)
 			JwtToken token = await PostAsync<LoginModel, JwtToken>(LoginPath, model);
 			await SetCredentialsAsync(model.Username, model.Password, token);
 
 			Authenticated = true;
 		}
 
+		/// <summary>
+		/// Logs the user out by deleting data in the device
+		/// </summary>
 		public void Logout()
 		{
 			Authenticated = false;
@@ -77,6 +98,11 @@ namespace MicroBee.Data
 			_client.DefaultRequestHeaders.Authorization = null;
 		}
 
+		/// <summary>
+		/// Registers a new user
+		/// </summary>
+		/// <param name="model">Register data</param>
+		/// <returns></returns>
 		public async Task RegisterAsync(RegisterModel model)
 		{
 			Logout();
@@ -87,28 +113,70 @@ namespace MicroBee.Data
 			Authenticated = true;
 		}
 
+		/// <summary>
+		/// Gets an object of the type T from the specified path
+		/// </summary>
+		/// <typeparam name="T">Type of the result</typeparam>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns>Object of type T</returns>
 		public async Task<T> GetAsync<T>(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			var content = await GetAsyncInternal(path, parameters, authorize);
 			return JsonConvert.DeserializeObject<T>(await content.ReadAsStringAsync());
 		}
+		/// <summary>
+		/// Gets a byte array from the specified path
+		/// </summary>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns>A byte array</returns>
 		public async Task<byte[]> GetByteArrayAsync(string path, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			var content = await GetAsyncInternal(path, parameters, authorize);
 			return await content.ReadAsByteArrayAsync();
 		}
 
-
+		/// <summary>
+		/// Posts an object of type T to the specified path and dismisses the result data.
+		/// </summary>
+		/// <typeparam name="T">Type of the sent object</typeparam>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="item">Object of type T which will be sent in the request</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns></returns>
 		public async Task PostAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			await PostAsyncInternal(path, item, parameters, authorize);
 		}
+		/// <summary>
+		/// Posts an object of type T to the specified path and keeps the response data.
+		/// </summary>
+		/// <typeparam name="T">Type of the sent object</typeparam>
+		/// <typeparam name="TRes">Type of the result</typeparam>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="item">Object of type T which will be sent in the request</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns>Object of type TRes sent in the response</returns>
 		public async Task<TRes> PostAsync<T, TRes>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			var resultString = await PostAsyncInternal(path, item, parameters, authorize);
 			return JsonConvert.DeserializeObject<TRes>(resultString);
 		}
 
+		/// <summary>
+		/// Puts an object of type T to the specified path, does not expect to have a result returned
+		/// </summary>
+		/// <typeparam name="T">Type of the sent object</typeparam>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="item">Object of type T which will be sent in the request</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns></returns>
 		public async Task PutAsync<T>(string path, T item, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
@@ -130,6 +198,15 @@ namespace MicroBee.Data
 			}
 		}
 
+		/// <summary>
+		/// Deletes data on path specified by TKey
+		/// </summary>
+		/// <typeparam name="TKey">Type of the data key</typeparam>
+		/// <param name="path">Path where the request will be sent to</param>
+		/// <param name="id">ID of the data to be deleted</param>
+		/// <param name="parameters">Request parameters</param>
+		/// <param name="authorize">Specifies whether the path requires user authorization</param>
+		/// <returns></returns>
 		public async Task DeleteAsync<TKey>(string path, TKey id, List<KeyValuePair<string, object>> parameters = null, bool authorize = false)
 		{
 			if (authorize)
@@ -188,6 +265,10 @@ namespace MicroBee.Data
 			return await response.Content.ReadAsStringAsync();
 		}
 
+		/// <summary>
+		/// Checks if the token needs to be refreshed; throws NotAuthenticatedException if the user is not logged in
+		/// </summary>
+		/// <returns></returns>
 		private async Task CheckTokenLifetimeAsync()
 		{
 			if (!Authenticated)
@@ -203,11 +284,19 @@ namespace MicroBee.Data
 				string username = await SecureStorage.GetAsync("username");
 				string password = await SecureStorage.GetAsync("password");
 
+				//gets a new token
 				LoginModel model = new LoginModel() { Username = username, Password = password };
 				await LoginAsync(model);
 			}
 		}
 
+		/// <summary>
+		/// Stores user credentials to device secure persistent storage
+		/// </summary>
+		/// <param name="username">Username data</param>
+		/// <param name="password">Password data</param>
+		/// <param name="token">Current bearer token</param>
+		/// <returns></returns>
 		private async Task SetCredentialsAsync(string username, string password, JwtToken token)
 		{
 			await SecureStorage.SetAsync("username", username);
@@ -219,9 +308,16 @@ namespace MicroBee.Data
 			_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.TokenString);
 		}
 
+		/// <summary>
+		/// Creates a Uri string by combining the path and route parameters. No parameters are added to the uri if the
+		/// list is null or empty.
+		/// </summary>
+		/// <param name="path">Uri path without parameters</param>
+		/// <param name="parameters">Route parameter dictionary</param>
+		/// <returns>Uri string</returns>
 		private string CreateUri(string path, List<KeyValuePair<string, object>> parameters)
 		{
-			if (parameters == null)
+			if (parameters == null || parameters.Count == 0)
 			{
 				return path;
 			}
@@ -244,10 +340,18 @@ namespace MicroBee.Data
 			return _builder.ToString();
 		}
 
+		/// <summary>
+		/// Jwt token model
+		/// </summary>
 		private class JwtToken
 		{
 			public string TokenString { get; set; }
 			public DateTime ExpireDateTime { get; set; }
+		}
+
+		public void Dispose()
+		{
+			_client?.Dispose();
 		}
 	}
 }
