@@ -62,6 +62,10 @@ be immediately added to the job list and can be accepted.
 
 Developer documentation – Xamarin Forms
 ------------------------
+### Configuration
+As for now, api paths are hardcoded in startup classes and in the services. Login credentials are stored in a platform-specific secure storage.
+As an extension, a dependency injection framework should be used to handle services.
+
 ### Page design
 Most of the page design is found in the XAML files, with initialization and handler methods in the .xaml.cs files. The MVVM pattern is used
 for almost every page (only the shortest pages which shouldn't be much extended lack it). App.xaml contains a few styles to be used globally
@@ -95,15 +99,22 @@ Developer documentation – ASP.NET Core
 This project serves as a backend service for the mobile application. It provides a web API, which sends json content (entities or models).
 Authentication is handled by jwt bearer tokens.
 
+### Configuration
+Configuration of the web api is handled in the Startup class. Some of the settings are stored in the appsettings.json file (namely token
+information, local connection string). In Starup.cs, db context, services, repositories and jwt token authentization is configured.
+Entity configuration (ApplicationUser and MicroItem) is handled in separated classes (and is applied in the Startup).
+
 ### Controllers
-There are two controllers - AccountController and ItemsController. The latter also handles image and category requests.
+There are two controllers - AccountController and ItemsController. The latter also handles image and category requests. In some cases,
+entities are returned as models, in other cases custom models are created (e.g. LoginModel).
 
 ### Services
-There are several services which provide access to the DAL. Apart from CRUD operations, some of them provide also basic filtering.
+There are several services which provide access to the DAL. Apart from CRUD operations, IMicroItemService provides also basic filtering.
 
 ### DAL
-The Data Access Layer contains entity data, database context and repositories. As specified in the technology section, in the implementation
-of the repositories, the O/RM framework EF Core is used.
+The Data Access Layer contains entity data, database context and repositories. As specified in the technologies section, the O/RM framework
+Entity Framework Core is used in the implementation of the repositories. Database structure is created and updated according to
+migrations.
 
 Technologies
 --------------
